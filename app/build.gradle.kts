@@ -43,6 +43,9 @@ android {
 
 dependencies {
 
+    //Use Image from URL
+    implementation(libs.coil.compose)
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

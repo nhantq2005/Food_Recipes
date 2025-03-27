@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.foodrecipes.feature_food_recipes.presentation.components.FavouriteButton
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,6 +25,7 @@ class MainActivity : ComponentActivity() {
                         name = "Window",
                         modifier = Modifier.padding(innerPadding)
                     )
+                    FavouriteButton()
                 }
             }
         }
