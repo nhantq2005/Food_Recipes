@@ -1,4 +1,4 @@
-package com.example.foodrecipes.feature_food_recipes.data.model.dto
+package com.example.foodrecipes.feature_food_recipes.domain.model
 
 data class MealItem(
     val idMeal: String,

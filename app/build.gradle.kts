@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     // Dagger - Hilt
+
     implementation(libs.hilt.android)
     implementation(libs.androidx.adapters)
 //    implementation("androidx.compose.material3:material3-android:1.3.1")
@@ -85,6 +86,9 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.hilt.android)
+    kapt("com.google.dagger:hilt-compiler:${libs.versions.hilt.get()}")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -7,21 +7,31 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface FoodRecipesApi {
+    //Tìm kiếm theo tên
     @GET("search.php")
     suspend fun searchMeal(
         @Query("s") mealName:String
-    ):MealResultDto
+    ):MealResultDto?
 
+    //Lấy danh sách category
     @GET("categories.php")
-    suspend fun getCategories(): CategoryResultDto
+    suspend fun getCategories(): CategoryResultDto?
 
+    //Món ngẫu nhiên
     @GET("random.php")
-    suspend fun getRandomMeal(): MealResultDto
+    suspend fun getRandomMeal(): MealResultDto?
 
+    //Lọc theo category
     @GET("filter.php")
     suspend fun getMealsByCategory(
         @Query("c") category: String
-    ):MealItemResultDto
+    ):MealItemResultDto?
+
+    //Lọc theo vùng
+    @GET("filter.php")
+    suspend fun getMealsByArea(
+        @Query("a") area: String
+    ): MealItemResultDto?
 
     companion object {
         const val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"
