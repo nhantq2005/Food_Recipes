@@ -2,9 +2,11 @@ package com.example.foodrecipes.feature_food_recipes.data.repository
 
 import coil.network.HttpException
 import com.example.foodrecipes.feature_food_recipes.data.model.api.FoodRecipesApi
+import com.example.foodrecipes.feature_food_recipes.data.model.mapper.toArea
 import com.example.foodrecipes.feature_food_recipes.data.model.mapper.toCategory
 import com.example.foodrecipes.feature_food_recipes.data.model.mapper.toMeal
 import com.example.foodrecipes.feature_food_recipes.data.model.mapper.toMealItem
+import com.example.foodrecipes.feature_food_recipes.domain.model.Area
 import com.example.foodrecipes.feature_food_recipes.domain.model.Category
 import com.example.foodrecipes.feature_food_recipes.domain.model.Meal
 import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
@@ -20,7 +22,7 @@ class FoodRecipesRepositoryImpl @Inject constructor(
 ) : FoodRecipesRepository {
     override suspend fun searchMeal(
         name: String
-    ): Flow<Result<Meal>> {
+    ): Flow<Result<List<Meal>>> {
         return flow {
             emit(Result.Loading(true))
 
@@ -45,14 +47,17 @@ class FoodRecipesRepositoryImpl @Inject constructor(
 
             remoteMealResultDto?.let { mealResultDto ->
                 mealResultDto.meals?.let { meals ->
-                    emit(Result.Success(meals[0].toMeal()))
+                    emit(Result.Success(meals.map { it.toMeal() }))
                     emit(Result.Loading(false))
                     return@flow
                 }
             }
+
             emit(Result.Loading(false))
         }
+
     }
+
 
     override suspend fun getCategories(): Flow<Result<List<Category>>> {
         return flow {
@@ -185,6 +190,40 @@ class FoodRecipesRepositoryImpl @Inject constructor(
             remoteMealResultDto?.let { mealResultDto ->
                 mealResultDto.meals?.let { meals ->
                     emit(Result.Success(meals.map { it.toMealItem() }))
+                    emit(Result.Loading(false))
+                    return@flow
+                }
+            }
+            emit(Result.Loading(false))
+        }
+    }
+
+    override suspend fun getArea(): Flow<Result<List<Area>>> {
+        return flow {
+            emit(Result.Loading(true))
+
+            val remoteAreaResultDto = try {
+                foodRecipesApi.getArea()
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Result.Error("Error"))
+                emit(Result.Loading(false))
+                return@flow
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Result.Error("Error"))
+                emit(Result.Loading(false))
+                return@flow
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(Result.Error("Error"))
+                emit(Result.Loading(false))
+                return@flow
+            }
+
+            remoteAreaResultDto?.let { areaResultDto ->
+                areaResultDto.meals?.let { areas ->
+                    emit(Result.Success(areas.map { it.toArea() }))
                     emit(Result.Loading(false))
                     return@flow
                 }

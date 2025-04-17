@@ -11,7 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
 import com.example.foodrecipes.feature_food_recipes.presentation.components.FavouriteButton
+import com.example.foodrecipes.feature_food_recipes.presentation.screen.CategoryScreen
+import com.example.foodrecipes.feature_food_recipes.presentation.screen.HomeScreen
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,30 +25,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FoodRecipesTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Window",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    FavouriteButton()
-                }
+                BottomBar()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FoodRecipesTheme {
-        Greeting("Android")
     }
 }

@@ -1,5 +1,6 @@
 package com.example.foodrecipes.feature_food_recipes.data.model.api
 
+import com.example.foodrecipes.feature_food_recipes.data.model.dto.AreaResultDto
 import com.example.foodrecipes.feature_food_recipes.data.model.dto.CategoryResultDto
 import com.example.foodrecipes.feature_food_recipes.data.model.dto.MealItemResultDto
 import com.example.foodrecipes.feature_food_recipes.data.model.dto.MealResultDto
@@ -32,6 +33,9 @@ interface FoodRecipesApi {
     suspend fun getMealsByArea(
         @Query("a") area: String
     ): MealItemResultDto?
+
+    @GET("list.php?a=list")
+    suspend fun getArea(): AreaResultDto?
 
     companion object {
         const val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"

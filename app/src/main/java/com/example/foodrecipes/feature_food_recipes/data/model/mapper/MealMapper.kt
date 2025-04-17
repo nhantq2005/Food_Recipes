@@ -1,8 +1,10 @@
 package com.example.foodrecipes.feature_food_recipes.data.model.mapper
 
+import com.example.foodrecipes.feature_food_recipes.data.model.dto.AreaDto
 import com.example.foodrecipes.feature_food_recipes.data.model.dto.CategoryDto
 import com.example.foodrecipes.feature_food_recipes.data.model.dto.MealDto
 import com.example.foodrecipes.feature_food_recipes.data.model.dto.MealItemDto
+import com.example.foodrecipes.feature_food_recipes.domain.model.Area
 import com.example.foodrecipes.feature_food_recipes.domain.model.Category
 import com.example.foodrecipes.feature_food_recipes.domain.model.Meal
 import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
@@ -78,5 +80,9 @@ fun MealItemDto.toMealItem() = MealItem(
     idMeal = idMeal ?: "",
     strMeal = strMeal ?: "",
     strMealThumb = strMealThumb ?: ""
+)
+
+fun AreaDto.toArea() = Area(
+    strArea = strArea ?: ""
 )
 

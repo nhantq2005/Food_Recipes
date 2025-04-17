@@ -1,5 +1,6 @@
 package com.example.foodrecipes.feature_food_recipes.domain.repository
 
+import com.example.foodrecipes.feature_food_recipes.domain.model.Area
 import com.example.foodrecipes.feature_food_recipes.domain.model.Category
 import com.example.foodrecipes.feature_food_recipes.domain.model.Meal
 import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface FoodRecipesRepository {
     suspend fun searchMeal(
         name:String
-    ):Flow<Result<Meal>>
+    ):Flow<Result<List<Meal>>>
 
     suspend fun getCategories():Flow<Result<List<Category>>>
 
@@ -23,4 +24,5 @@ interface FoodRecipesRepository {
         area:String
     ):Flow<Result<List<MealItem>>>
 
+    suspend fun getArea():Flow<Result<List<Area>>>
 }
