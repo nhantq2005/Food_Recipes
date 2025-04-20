@@ -1,8 +1,11 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodrecipes.feature_food_recipes.data.model.mapper.getIngredients
+import com.example.foodrecipes.feature_food_recipes.data.model.mapper.getMeasures
 import com.example.foodrecipes.feature_food_recipes.domain.repository.FoodRecipesRepository
 import com.example.foodrecipes.feature_food_recipes.presentation.state.DetailState
 import com.example.foodrecipes.util.Result
@@ -33,8 +36,12 @@ class DetailViewModel @Inject constructor(
                 )
                 getMealById()
             }
+
         }
+
+
     }
+
 
     private fun getMealById() {
         job?.cancel()
@@ -53,9 +60,10 @@ class DetailViewModel @Inject constructor(
                         is Result.Success<*> -> {
                             result.data?.let { meal ->
                                 _state.update {
-                                    it.copy(meal = meal)
+                                    it.copy(meal = meal, listIngredient = meal.getIngredients(), listMeasure = meal.getMeasures())
                                 }
                             }
+                            Log.d("DetailViewModel", "getMealById: ${state.value.listIngredient}")
                         }
                     }
                 }

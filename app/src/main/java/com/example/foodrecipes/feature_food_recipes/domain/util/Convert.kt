@@ -1,7 +1,7 @@
 package com.example.foodrecipes.feature_food_recipes.domain.util
 
-class Convert {
+//class Convert {
     fun convertIngredientName(ingredient: String):String{
         return ingredient.replace(" ","-")
     }
-}
+//}

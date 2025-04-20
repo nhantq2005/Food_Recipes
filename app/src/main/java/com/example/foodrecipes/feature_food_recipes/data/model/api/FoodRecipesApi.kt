@@ -38,7 +38,7 @@ interface FoodRecipesApi {
     suspend fun getArea(): AreaResultDto?
 
     @GET("lookup.php")
-    fun getMealById(
+    suspend fun getMealById(
         @Query("i") id: String
     ): MealResultDto?
 
