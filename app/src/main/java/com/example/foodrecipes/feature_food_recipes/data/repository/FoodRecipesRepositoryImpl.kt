@@ -89,6 +89,7 @@ class FoodRecipesRepositoryImpl @Inject constructor(
                     return@flow
                 }
             }
+            emit(Result.Loading(false))
         }
     }
 
@@ -232,4 +233,36 @@ class FoodRecipesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getMealById(id: String): Flow<Result<Meal>> {
+        return flow {
+            emit(Result.Loading(true))
+            val remoteMealResultDto = try {
+                foodRecipesApi.getMealById(id)
+                } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Result.Error("Error"))
+                emit(Result.Loading(false))
+                return@flow
+            }catch (e:IOException){
+                e.printStackTrace()
+                emit(Result.Error("Error"))
+                emit(Result.Loading(false))
+                return@flow
+            }catch (e:Exception){
+                e.printStackTrace()
+                emit(Result.Error("Error"))
+                emit(Result.Loading(false))
+                return@flow
+            }
+
+            remoteMealResultDto?.let { mealResultDto ->
+                mealResultDto.meals?.let { meals ->
+                    emit(Result.Success(meals[0].toMeal()))
+                    emit(Result.Loading(false))
+                    return@flow
+                }
+            }
+            emit(Result.Loading(false))
+        }
+    }
 }

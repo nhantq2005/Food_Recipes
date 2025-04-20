@@ -25,4 +25,8 @@ interface FoodRecipesRepository {
     ):Flow<Result<List<MealItem>>>
 
     suspend fun getArea():Flow<Result<List<Area>>>
+
+    suspend fun getMealById(
+        id:String
+    ):Flow<Result<Meal>>
 }

@@ -38,7 +38,7 @@ class CategoryViewModel @Inject constructor(
                         is Result.Error<*> -> Unit
                         is Result.Loading<*> -> {
                             _state.update {
-                                it.copy(isLoading = true)
+                                it.copy(isLoading = result.isLoading)
                             }
                         }
 

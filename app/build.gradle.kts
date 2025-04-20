@@ -56,6 +56,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.adapters)
+    implementation(libs.androidx.media3.common.ktx)
 //    implementation("androidx.compose.material3:material3-android:1.3.1")
     kapt(libs.hilt.compiler)
     kapt(libs.androidx.hilt.compiler)

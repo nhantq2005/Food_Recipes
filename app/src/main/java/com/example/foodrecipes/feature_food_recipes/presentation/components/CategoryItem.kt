@@ -1,32 +1,36 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
+import com.example.foodrecipes.feature_food_recipes.domain.model.Category
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
 
 @Composable
-fun SmallMealItem(
-    mealItem: MealItem,
+fun CategoryItem(
+    category: Category,
     navController: NavController
 ){
     Card(
@@ -34,31 +38,29 @@ fun SmallMealItem(
             .fillMaxSize()
             .shadow(7.dp, RoundedCornerShape(10.dp))
             .clickable {
-                navController.navigate(
-                    Screen.DetailScreen.route
-                        + "?id=${mealItem.idMeal}"
-                )
+                navController.navigate(Screen.MealsByCategoryScreen.route
+                + "?category=${category.strCategory}")
             },
+//        colors = CardDefaults.cardColors(Color.White)
+
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = mealItem.strMealThumb,
-                contentDescription = "Meal Image",
-                modifier = Modifier.clip(shape = RoundedCornerShape(15.dp))
+                model = category.strCategoryThumb,
+                contentDescription = "Category Image",
+                modifier = Modifier.height(100.dp)
+                    .width(150.dp)
+                    .clip(RoundedCornerShape(15.dp))
+
             )
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = mealItem.strMeal)
-                Icon(Icons.Default.AddCircleOutline, contentDescription = "Add Icon")
-            }
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(text = category.strCategory)
         }
     }
+
 }

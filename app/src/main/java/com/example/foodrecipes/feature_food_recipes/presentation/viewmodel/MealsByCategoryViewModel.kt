@@ -1,10 +1,13 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.viewmodel
 
+import androidx.annotation.OptIn
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import com.example.foodrecipes.feature_food_recipes.domain.repository.FoodRecipesRepository
-import com.example.foodrecipes.feature_food_recipes.presentation.state.DetailState
+import com.example.foodrecipes.feature_food_recipes.presentation.state.MealsByCategoryState
 import com.example.foodrecipes.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -15,45 +18,44 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(
+class MealsByCategoryViewModel @OptIn(UnstableApi::class)
+@Inject constructor(
     private val foodRecipesRepository: FoodRecipesRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _state = MutableStateFlow(DetailState())
+    val _state = MutableStateFlow(MealsByCategoryState())
     val state = _state.asStateFlow()
 
     private var job: Job? = null
 
     init {
-
-        savedStateHandle.get<String>("id")?.let { id ->
+        savedStateHandle.get<String>("category")?.let { category ->
             viewModelScope.launch {
                 _state.value = state.value.copy(
-                    id = id
+                    category = category
                 )
-                getMealById()
+                getMealsByCategory()
             }
         }
     }
 
-    private fun getMealById() {
+    private fun getMealsByCategory() {
         job?.cancel()
-        viewModelScope.launch {
-            foodRecipesRepository.getMealById(state.value.id)
+        job = viewModelScope.launch {
+            foodRecipesRepository.getMealsByCategory(state.value.category)
                 .collect { result ->
                     when (result) {
                         is Result.Error<*> -> Unit
-
                         is Result.Loading<*> -> {
-                            _state.update {
-                                it.copy(isLoading = result.isLoading)
-                            }
+                            _state.value = state.value.copy(
+                                isLoading = result.isLoading
+                            )
                         }
 
                         is Result.Success<*> -> {
-                            result.data?.let { meal ->
+                            result.data?.let { meals ->
                                 _state.update {
-                                    it.copy(meal = meal)
+                                    it.copy(meals = meals)
                                 }
                             }
                         }

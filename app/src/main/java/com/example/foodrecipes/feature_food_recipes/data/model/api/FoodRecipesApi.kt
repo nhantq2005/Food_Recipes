@@ -37,6 +37,11 @@ interface FoodRecipesApi {
     @GET("list.php?a=list")
     suspend fun getArea(): AreaResultDto?
 
+    @GET("lookup.php")
+    fun getMealById(
+        @Query("i") id: String
+    ): MealResultDto?
+
     companion object {
         const val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"
     }

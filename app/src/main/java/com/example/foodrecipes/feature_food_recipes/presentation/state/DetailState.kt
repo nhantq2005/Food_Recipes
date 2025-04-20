@@ -1,4 +1,9 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.state
 
-class DetailState {
-}
+import com.example.foodrecipes.feature_food_recipes.domain.model.Meal
+
+data class DetailState (
+    val id:String="",
+    val meal : Meal? = null,
+    val isLoading:Boolean = false
+)
