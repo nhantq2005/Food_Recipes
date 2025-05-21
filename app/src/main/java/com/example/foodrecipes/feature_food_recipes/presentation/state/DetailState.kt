@@ -6,7 +6,7 @@ data class DetailState(
     val id:String="",
     val meal: Meal? = null,
     val isLoading:Boolean = false,
-    val listIngredient:List<String?> = emptyList(),
-    val listMeasure:List<String?> = emptyList()
+    val listIngredient:List<String> = emptyList(),
+    val listMeasure:List<String> = emptyList()
 
 )

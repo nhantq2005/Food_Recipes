@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.foodrecipes.feature_food_recipes.domain.util.convertIngredientName
 import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
+import com.example.foodrecipes.feature_food_recipes.presentation.components.IngredientItem
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.DetailViewModel
 
 @Composable
@@ -35,6 +36,7 @@ fun DetailScreen(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            Text(text = state.value.id)
             AsyncImage(
                 model = state.value.meal?.strMealThumb,
                 contentDescription = null
@@ -43,7 +45,12 @@ fun DetailScreen(
             Text(text = state.value.meal?.strMeal.toString())
             Spacer(Modifier.height(15.dp))
             state.value.listIngredient.zip(state.value.listMeasure) { ingredient, measure ->
-                Text(text = "${convertIngredientName(ingredient.toString())} - $measure")
+                IngredientItem(ingredient, measure)
+                Spacer(Modifier.height(5.dp))
+
+                ingredient.let { Log.d("DetailScreen", it) }
+
+
 
             }
         }

@@ -21,9 +21,11 @@ import com.example.foodrecipes.feature_food_recipes.presentation.components.Favo
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.AccountScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.CategoryScreen
+import com.example.foodrecipes.feature_food_recipes.presentation.screen.ChipGroupExample
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.DetailScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.FavouriteScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.HomeScreen
+import com.example.foodrecipes.feature_food_recipes.presentation.screen.LoginScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.MealsByCategoryScreen
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,45 +37,47 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FoodRecipesTheme {
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
-                    composable(Screen.HomeScreen.route) {
-                        HomeScreen(navController)
-                    }
-                    composable(Screen.CategoryScreen.route) {
-                        CategoryScreen(navController)
-                    }
-                    composable(Screen.FavouriteScreen.route) {
-                        FavouriteScreen(navController)
-                    }
-                    composable(Screen.AccountScreen.route) {
-                        AccountScreen(navController)
-                    }
-                    composable(Screen.DetailScreen.route + "?id={id}",
-                        arguments = listOf(
-                            navArgument("id") {
-                                type = NavType.StringType
-                                defaultValue = ""
-                            }
-                        )
-                    ) {
-                        DetailScreen(navController)
-                    }
-                    composable(Screen.LoginScreen.route) {
-                        Text(text = "Login Screen")
-                    }
-                    composable(
-                        Screen.MealsByCategoryScreen.route + "?category={category}",
-                        arguments = listOf(
-                            navArgument("category") {
-                                type = NavType.StringType
-                                defaultValue = ""
-                            }
-                        )
-                    ) {
-                        MealsByCategoryScreen(navController)
-                    }
-                }
+//                val navController = rememberNavController()
+//                NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+//                    composable(Screen.HomeScreen.route) {
+//                        HomeScreen(navController)
+//                    }
+//                    composable(Screen.CategoryScreen.route) {
+//                        CategoryScreen(navController)
+//                    }
+//                    composable(Screen.FavouriteScreen.route) {
+//                        FavouriteScreen(navController)
+//                    }
+//                    composable(Screen.AccountScreen.route) {
+//                        AccountScreen(navController)
+//                    }
+//                    composable(Screen.DetailScreen.route + "?id={id}",
+//                        arguments = listOf(
+//                            navArgument("id") {
+//                                type = NavType.StringType
+//                                defaultValue = ""
+//                            }
+//                        )
+//                    ) {
+//                        DetailScreen(navController)
+//                    }
+//                    composable(Screen.LoginScreen.route) {
+//                        Text(text = "Login Screen")
+//                    }
+//                    composable(
+//                        Screen.MealsByCategoryScreen.route + "?category={category}",
+//                        arguments = listOf(
+//                            navArgument("category") {
+//                                type = NavType.StringType
+//                                defaultValue = ""
+//                            }
+//                        )
+//                    ) {
+//                        MealsByCategoryScreen(navController)
+//                    }
+//                }
+
+                LoginScreen()
             }
         }
     }
