@@ -4,12 +4,14 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 
 private val lightScheme = lightColorScheme(
 
@@ -25,6 +27,24 @@ private val lightScheme = lightColorScheme(
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight
 
+)
+
+val typography = Typography(
+    displayLarge = TextStyle(fontFamily = beVietNamFont),
+    displayMedium = TextStyle(fontFamily = beVietNamFont),
+    displaySmall = TextStyle(fontFamily = beVietNamFont),
+    headlineLarge = TextStyle(fontFamily = beVietNamFont),
+    headlineMedium = TextStyle(fontFamily = beVietNamFont),
+    headlineSmall = TextStyle(fontFamily = beVietNamFont),
+    titleLarge = TextStyle(fontFamily = beVietNamFont),
+    titleMedium = TextStyle(fontFamily = beVietNamFont),
+    titleSmall = TextStyle(fontFamily = beVietNamFont),
+    bodyLarge = TextStyle(fontFamily = beVietNamFont),
+    bodyMedium = TextStyle(fontFamily = beVietNamFont),
+    bodySmall = TextStyle(fontFamily = beVietNamFont),
+    labelLarge = TextStyle(fontFamily = beVietNamFont),
+    labelMedium = TextStyle(fontFamily = beVietNamFont),
+    labelSmall = TextStyle(fontFamily = beVietNamFont)
 )
 
 private val darkScheme = darkColorScheme(
@@ -60,7 +80,7 @@ fun FoodRecipesTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = typography,
         content = content
     )
 }

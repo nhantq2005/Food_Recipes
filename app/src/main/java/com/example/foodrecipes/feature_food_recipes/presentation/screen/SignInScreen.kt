@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,13 +27,16 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.foodrecipes.R
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SignInButton
 import com.example.foodrecipes.feature_food_recipes.presentation.state.AuthState
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.AuthViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
+import com.example.foodrecipes.ui.theme.pacificoFont
 import com.example.foodrecipes.util.Responsive
 
 @Composable
@@ -71,8 +75,17 @@ fun SignInScreen(
                     contentDescription = "Meal image",
                     modifier = Modifier.size(Responsive.scaledDp(150))
                 )
-                Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "Cook\nNow")
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = "Cook\nNow!",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontFamily = pacificoFont,
+                        fontSize = Responsive.scaledSp(60),
+                        lineHeight = 70.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    ),
+
+                    )
             }
             Column(
                 modifier = Modifier
@@ -80,9 +93,15 @@ fun SignInScreen(
                     .shadow(10.dp, shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(Responsive.scaledDp(16)),
-                verticalArrangement = Arrangement.SpaceEvenly
+//                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(text = "Welcome\nBack!")
+                Text(
+                    text = "Welcome\nBack!", style = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = Responsive.scaledSp(35),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                )
+                Spacer(modifier = Modifier.height(Responsive.scaledDp(24)))
                 SignInButton(onClick = onSignInClick)
             }
         }
@@ -122,7 +141,7 @@ fun SignInScreen(
 @Composable
 private fun SignInScreenPreview() {
     FoodRecipesTheme(dynamicColor = false) {
-//        LoginScreen()
+//        SignInScreen()
 
     }
 }

@@ -8,16 +8,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.foodrecipes.R
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
+import com.example.foodrecipes.ui.theme.beVietNamFont
 import com.example.foodrecipes.util.Responsive
 
 @Composable
@@ -26,9 +32,12 @@ fun SignInButton(
 ) {
     Button(
         onClick = onClick,
+
+
         shape = RoundedCornerShape(15.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
         modifier = Modifier.fillMaxWidth()
+            .shadow(10.dp, shape = RoundedCornerShape(10.dp)),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
 
 
     ) {
@@ -41,7 +50,11 @@ fun SignInButton(
         Spacer(modifier = Modifier.width(10.dp))
         Text(text = stringResource(id = R.string.sign_in_google),
             color = Color.Black,
-            fontSize = Responsive.scaledSp(25))
+            fontSize = Responsive.scaledSp(25),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Medium
+            ),
+        )
     }
 }
 
