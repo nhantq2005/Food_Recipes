@@ -1,7 +1,6 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.screen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,25 +11,45 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.foodrecipes.R
+import com.example.foodrecipes.feature_food_recipes.presentation.components.SignInButton
+import com.example.foodrecipes.feature_food_recipes.presentation.state.AuthState
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.AuthViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
 
 @Composable
-fun LoginScreen() {
+fun SignInScreen(
+    state: AuthState,
+    onSignInClick: () -> Unit
+) {
+    val context = LocalContext.current
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,12 +75,15 @@ fun LoginScreen() {
                 Text(text = "Cook\nNow")
             }
             Column(
-                modifier = Modifier.fillMaxSize()
-                    .shadow(10.dp,shape = RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.surface),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shadow(10.dp, shape = RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(Responsive.scaledDp(16)),
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(text = "Welcome\nBack!")
-
+                SignInButton(onClick = onSignInClick)
             }
         }
     }
@@ -100,7 +122,7 @@ fun LoginScreen() {
 @Composable
 private fun SignInScreenPreview() {
     FoodRecipesTheme(dynamicColor = false) {
-        LoginScreen()
+//        LoginScreen()
 
     }
 }

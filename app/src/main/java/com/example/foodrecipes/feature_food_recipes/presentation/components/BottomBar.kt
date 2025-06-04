@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AutoAwesomeMosaic
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -30,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
@@ -38,6 +41,7 @@ import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Scre
 @Composable
 fun BottomBar(
     navController: NavController,
+    title:@Composable () -> Unit = {},
     content: @Composable () ->Unit
 ) {
 
@@ -76,18 +80,15 @@ fun BottomBar(
         topBar = {
             TopAppBar(
                 title = {
-                    Row {
-                        Icon(Icons.Filled.AutoAwesomeMosaic, contentDescription = "Grid Icon")
-                        Spacer(modifier = Modifier.width(5.dp))
-                        Text(text = "Categories")
-                    }
+                    title()
                 }
             )
         },
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = androidx.compose.material3.MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp)),
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 tonalElevation = 5.dp
             ) {
                 Row(

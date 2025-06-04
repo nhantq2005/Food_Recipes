@@ -2,15 +2,32 @@ package com.example.foodrecipes.feature_food_recipes.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,13 +42,23 @@ import com.example.foodrecipes.feature_food_recipes.presentation.screen.ChipGrou
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.DetailScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.FavouriteScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.HomeScreen
-import com.example.foodrecipes.feature_food_recipes.presentation.screen.LoginScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.MealsByCategoryScreen
+import com.example.foodrecipes.feature_food_recipes.presentation.screen.SignInScreen
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.AuthViewModel
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.GoogleAuthUiClient
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
+import com.google.android.gms.auth.api.identity.Identity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val googleAuthUiClient by lazy {
+        GoogleAuthUiClient(
+            context = applicationContext,
+            oneTapClient = Identity.getSignInClient(applicationContext)
+        )
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -76,8 +103,34 @@ class MainActivity : ComponentActivity() {
 //                        MealsByCategoryScreen(navController)
 //                    }
 //                }
-
-                LoginScreen()
+                val viewModel = viewModel<AuthViewModel>()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                val launcher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartIntentSenderForResult(),
+                    onResult = { result ->
+                        if(result.resultCode == RESULT_OK) {
+                            lifecycleScope.launch {
+                                val signInResult = googleAuthUiClient.signInWithIntent(
+                                    intent = result.data ?: return@launch
+                                )
+                                viewModel.onSignInResult(signInResult)
+                            }
+                        }
+                    }
+                )
+                SignInScreen(
+                    state = state,
+                    onSignInClick = {
+                        lifecycleScope.launch {
+                            val signInIntentSender = googleAuthUiClient.signIn()
+                            launcher.launch(
+                                IntentSenderRequest.Builder(
+                                    signInIntentSender ?: return@launch
+                                ).build()
+                            )
+                        }
+                    }
+                )
             }
         }
     }

@@ -1,8 +1,0 @@
-package com.example.foodrecipes.feature_food_recipes.presentation.components
-
-import androidx.compose.runtime.Composable
-
-@Composable
-fun LoginButton(){
-
-}
