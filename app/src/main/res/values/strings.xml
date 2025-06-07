@@ -2,5 +2,9 @@
     <string name="web_client_id">691642762451-7n9jmp56olqbuf194k1vte73mvk9j7of.apps.googleusercontent.com</string>
     <string name="app_name">Food Recipes</string>
     <string name="sign_in_google">Sign in with Google</string>
-    <string name="meail_question">What do you want \n to eat today?</string>
+    <string name="meal_question">What do you want\nto eat today?</string>
+    <string name="today_meal">Today\'s Meal</string>
+    <string name="aera">Area</string>
+    <string name="category_title">Category</string>
+    <string name="favourite_title">Favorite</string>"
 </resources>

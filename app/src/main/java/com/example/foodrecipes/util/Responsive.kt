@@ -12,7 +12,7 @@ object Responsive{
     fun calculateScaleFactor(): Float {
         val configuration = LocalConfiguration.current
         val screenWidth = configuration.screenWidthDp
-        return (screenWidth / 400f).coerceIn(0.85f, 1.3f)
+        return (screenWidth / 400f).coerceIn(0.5f, 1.5f)
     }
 
     // Kích thước có thể điều chỉnh tự động

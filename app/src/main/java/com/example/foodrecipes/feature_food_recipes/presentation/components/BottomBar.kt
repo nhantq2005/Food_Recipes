@@ -1,5 +1,6 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -33,16 +36,20 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
+import com.example.foodrecipes.util.Responsive
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomBar(
     navController: NavController,
-    title:@Composable () -> Unit = {},
-    content: @Composable () ->Unit
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    content: @Composable () -> Unit
+
 ) {
 
     val items = listOf(
@@ -77,16 +84,10 @@ fun BottomBar(
     )
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    title()
-                }
-            )
-        },
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp)),
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 tonalElevation = 5.dp
@@ -96,28 +97,37 @@ fun BottomBar(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     items.forEachIndexed { _, item ->
-                val currenRoute = navController.currentDestination?.route
+                        val currenRoute = navController.currentDestination?.route
                         NavigationBarItem(
                             selected = currenRoute == item.route,
+
+
                             onClick = {
                                 navController.navigate(item.route)
-                                      },
+                            },
                             icon = {
-                                if(currenRoute == item.route) {
+                                if (currenRoute == item.route) {
                                     Icon(
                                         item.selectedIcon,
-                                        contentDescription = "Navigation Icon"
+                                        contentDescription = "Navigation Icon",
+                                        modifier = Modifier.size(Responsive.scaledDp(25))
                                     )
-                                }else{
+                                } else {
                                     Icon(
                                         item.unselectIcon,
-                                        contentDescription = "Navigation Icon"
+                                        contentDescription = "Navigation Icon",
+                                        modifier = Modifier.size(Responsive.scaledDp(25))
                                     )
 
                                 }
                             },
                             label = {
-                                Text(text = item.label)
+                                Text(
+                                    text = item.label,
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                )
                             }
                         )
                     }
@@ -125,10 +135,12 @@ fun BottomBar(
             }
         }
     ) { paddingValues ->
-        Box(modifier = Modifier
-            .padding(paddingValues)
-            .padding(5.dp)
-            .fillMaxSize()
+        Box(
+            modifier = Modifier
+                .background(backgroundColor)
+                .fillMaxSize()
+                .padding(paddingValues)
+
         ) {
             content()
         }

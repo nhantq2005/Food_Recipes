@@ -23,11 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.foodrecipes.feature_food_recipes.domain.model.Category
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
+import com.example.foodrecipes.util.Responsive
 
 @Composable
 fun CategoryItem(
@@ -61,7 +63,11 @@ fun CategoryItem(
 
             )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = category.strCategory)
+            Text(text = category.strCategory, style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = Responsive.scaledSp(20),
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            ))
         }
     }
 

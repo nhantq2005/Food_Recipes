@@ -11,5 +11,6 @@ data class HomeState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val mealsByArea:List<MealItem> = emptyList(),
-    val area:List<Area> = emptyList()
+    val area:List<Area> = emptyList(),
+    val selectedArea:String = ""
 )

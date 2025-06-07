@@ -27,10 +27,12 @@ class HomeViewModel @Inject constructor(
     init {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            getRandomMeal()
             getArea()
+            getRandomMeal()
+            getMealsByArea(state.value.selectedArea)
         }
-        state.value.randomMeal?.let { Log.d("HomeViewModel", it.strMeal) }
+
+        Log.d("LIST", state.value.mealsByArea.toString())
     }
 
     fun onEvent(event: HomeEvent) {
@@ -49,15 +51,29 @@ class HomeViewModel @Inject constructor(
             }
 
             is HomeEvent.GetMealByArea -> {
-
+                searchJob?.cancel()
+                searchJob = viewModelScope.launch {
+                    getMealsByArea(event.area)
+                }
             }
+
             HomeEvent.GetRandomMeal -> {
 
             }
+
             HomeEvent.OnSearchClick -> {
                 searchJob?.cancel()
                 searchJob = viewModelScope.launch {
                     searchMeal()
+                }
+            }
+
+            //Change value of aera when user click other chip
+            is HomeEvent.ChangeAera -> {
+                viewModelScope.launch {
+                    _state.value = state.value.copy(
+                        selectedArea = event.area
+                    )
                 }
             }
         }
@@ -80,7 +96,7 @@ class HomeViewModel @Inject constructor(
                         is Result.Success<*> -> {
                             result.data?.let { meal ->
                                 _state.update {
-                                    it.copy(meals = meal)
+                                    it.copy(meals = meal, isLoading = false)
                                 }
                             }
                         }
@@ -106,7 +122,7 @@ class HomeViewModel @Inject constructor(
                         is Result.Success<*> -> {
                             result.data?.let { meal ->
                                 _state.update {
-                                    it.copy(randomMeal = meal)
+                                    it.copy(randomMeal = meal,isLoading = false)
                                 }
                             }
                         }
@@ -135,6 +151,9 @@ class HomeViewModel @Inject constructor(
                                     it.copy(area = area)
                                 }
                             }
+                            _state.update {
+                                it.copy(selectedArea = it.area[0].strArea, isLoading = false)
+                            }
                         }
                     }
                 }
@@ -158,7 +177,7 @@ class HomeViewModel @Inject constructor(
                         is Result.Success<*> -> {
                             result.data?.let { meals ->
                                 _state.update {
-                                    it.copy(mealsByArea = meals)
+                                    it.copy(mealsByArea = meals, isLoading = false)
                                 }
                             }
                         }

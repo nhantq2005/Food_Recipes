@@ -1,6 +1,7 @@
 package com.example.foodrecipes.feature_food_recipes.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -16,6 +17,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,15 +61,25 @@ class MainActivity : ComponentActivity() {
             oneTapClient = Identity.getSignInClient(applicationContext)
         )
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             FoodRecipesTheme {
-//                val navController = rememberNavController()
-//                NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+                val navController = rememberNavController()
+//                NavHost(
+//                    navController = navController, startDestination =
+//                        if (googleAuthUiClient.getSignedInUser() == null)
+//                            Screen.LoginScreen.route
+//                        else
+//                            Screen.HomeScreen.route
+//                ) {
 //                    composable(Screen.HomeScreen.route) {
-//                        HomeScreen(navController)
+//                        HomeScreen(
+//                            navController = navController,
+//                            userData = googleAuthUiClient.getSignedInUser()
+//                        )
 //                    }
 //                    composable(Screen.CategoryScreen.route) {
 //                        CategoryScreen(navController)
@@ -76,9 +88,15 @@ class MainActivity : ComponentActivity() {
 //                        FavouriteScreen(navController)
 //                    }
 //                    composable(Screen.AccountScreen.route) {
-//                        AccountScreen(navController)
+//                        AccountScreen(navController) {
+//                            lifecycleScope.launch {
+//                                googleAuthUiClient.signOut()
+//                                navController.navigate(Screen.LoginScreen.route)
+//                            }
+//                        }
 //                    }
-//                    composable(Screen.DetailScreen.route + "?id={id}",
+//                    composable(
+//                        Screen.DetailScreen.route + "?id={id}",
 //                        arguments = listOf(
 //                            navArgument("id") {
 //                                type = NavType.StringType
@@ -89,8 +107,52 @@ class MainActivity : ComponentActivity() {
 //                        DetailScreen(navController)
 //                    }
 //                    composable(Screen.LoginScreen.route) {
-//                        Text(text = "Login Screen")
+//                        val viewModel = viewModel<AuthViewModel>()
+//                        val state by viewModel.state.collectAsStateWithLifecycle()
+//
+//                        LaunchedEffect(key1 = Unit) {
+//                            if (googleAuthUiClient.getSignedInUser() != null) {
+//                                navController.navigate(Screen.HomeScreen.route)
+//                            }
+//                        }
+//
+//                        val launcher = rememberLauncherForActivityResult(
+//                            contract = ActivityResultContracts.StartIntentSenderForResult(),
+//                            onResult = { result ->
+//                                if (result.resultCode == RESULT_OK) {
+//                                    lifecycleScope.launch {
+//                                        val signInResult = googleAuthUiClient.signInWithIntent(
+//                                            intent = result.data ?: return@launch
+//                                        )
+//                                        viewModel.onSignInResult(signInResult)
+//                                    }
+//                                }
+//                            }
+//                        )
+//
+//                        LaunchedEffect(key1 = state.isSignInSuccessful) {
+//                            if (state.isSignInSuccessful) {
+//                                navController.navigate(Screen.HomeScreen.route)
+//                                viewModel.resetState()
+//                            }
+//                        }
+//
+//                        SignInScreen(
+//                            state = state,
+//                            onSignInClick = {
+//                                lifecycleScope.launch {
+//                                    val signInIntentSender = googleAuthUiClient.signIn()
+//                                    launcher.launch(
+//                                        IntentSenderRequest.Builder(
+//                                            signInIntentSender ?: return@launch
+//                                        ).build()
+//                                    )
+//                                }
+//                            }
+//                        )
 //                    }
+//
+//
 //                    composable(
 //                        Screen.MealsByCategoryScreen.route + "?category={category}",
 //                        arguments = listOf(
@@ -103,34 +165,13 @@ class MainActivity : ComponentActivity() {
 //                        MealsByCategoryScreen(navController)
 //                    }
 //                }
-                val viewModel = viewModel<AuthViewModel>()
-                val state by viewModel.state.collectAsStateWithLifecycle()
-                val launcher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.StartIntentSenderForResult(),
-                    onResult = { result ->
-                        if(result.resultCode == RESULT_OK) {
-                            lifecycleScope.launch {
-                                val signInResult = googleAuthUiClient.signInWithIntent(
-                                    intent = result.data ?: return@launch
-                                )
-                                viewModel.onSignInResult(signInResult)
-                            }
-                        }
-                    }
+
+                HomeScreen(
+                    navController = navController,
+                    userData = googleAuthUiClient.getSignedInUser()
                 )
-                SignInScreen(
-                    state = state,
-                    onSignInClick = {
-                        lifecycleScope.launch {
-                            val signInIntentSender = googleAuthUiClient.signIn()
-                            launcher.launch(
-                                IntentSenderRequest.Builder(
-                                    signInIntentSender ?: return@launch
-                                ).build()
-                            )
-                        }
-                    }
-                )
+//                HomeScreen(rememberNavController())
+//                CategoryScreen(rememberNavController())
             }
         }
     }
