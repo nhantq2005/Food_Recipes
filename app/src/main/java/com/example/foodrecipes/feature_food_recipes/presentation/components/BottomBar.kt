@@ -90,7 +90,7 @@ fun BottomBar(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp)),
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                tonalElevation = 5.dp
+                tonalElevation = 5.dp,
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

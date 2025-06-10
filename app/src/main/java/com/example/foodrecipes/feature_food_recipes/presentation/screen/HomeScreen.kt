@@ -1,7 +1,6 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.screen
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,18 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.foodrecipes.R
 import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
 import com.example.foodrecipes.feature_food_recipes.presentation.components.Chip
@@ -52,7 +45,6 @@ import com.example.foodrecipes.feature_food_recipes.presentation.components.Smal
 import com.example.foodrecipes.feature_food_recipes.presentation.event.HomeEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.HomeState
 import com.example.foodrecipes.feature_food_recipes.presentation.state.UserData
-import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.AuthViewModel
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.HomeViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
@@ -64,9 +56,6 @@ fun HomeScreen(
 ) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val state by homeViewModel.state.collectAsState()
-
-//    val authViewModel = hiltViewModel<AuthViewModel>()
-//    val user by authViewModel.state.collectAsState()
 
     BottomBar(navController = navController) {
         Column(
@@ -80,8 +69,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(
-                    ) {
+                    Column{
                         Text(
                             text = "Hello ${userData?.username}",
                             style = MaterialTheme.typography.bodyMedium.copy(
@@ -106,7 +94,13 @@ fun HomeScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                SearchTextField()
+                SearchTextField(
+                    state.searhWord,
+                    onValueChange = {
+                        homeViewModel.onEvent(HomeEvent.EnteredWord(it))
+                        homeViewModel.onEvent(HomeEvent.OnSearchClick)
+                    }
+                )
             }
             Spacer(modifier = Modifier.height(10.dp))
             Box(
@@ -123,37 +117,53 @@ fun HomeScreen(
 //                    }
 //                }
 //                else {
-                MealRecommendation(
-                    state = state,
-                    viewModel = homeViewModel,
-                    navController = navController
-                )
+//                MealRecommendation(
+//                    state = state,
+//                    viewModel = homeViewModel,
+//                    navController = navController
+//                )
 //                }
+                if (state.searhWord != "")
+                    MealsResult(state = state, navController = navController)
+                else
+                    MealRecommendation(
+                        state = state,
+                        viewModel = homeViewModel,
+                        navController = navController
+                    )
             }
-
-
         }
     }
 }
 
 @Composable
-fun MealsResult() {
+fun MealsResult(
+    state: HomeState,
+    navController: NavController
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier.padding(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-
+        items(state.meals) { mealItem ->
+            SmallMealItem(mealItem = mealItem, navController = navController)
+        }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MealRecommendation(state: HomeState, viewModel: HomeViewModel, navController: NavController) {
+fun MealRecommendation(
+    state: HomeState,
+    viewModel: HomeViewModel,
+    navController: NavController
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        item(span = { GridItemSpan(2) }) {
+        item(span = { GridItemSpan(2) }, key = "header_today_meal") {
             Column {
                 Text(
                     stringResource(R.string.today_meal),
@@ -164,7 +174,7 @@ fun MealRecommendation(state: HomeState, viewModel: HomeViewModel, navController
                     )
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                state.randomMeal?.let { LargeMealItem(it) }
+                state.randomMeal?.let { LargeMealItem(it, navController = navController) }
             }
 
         }

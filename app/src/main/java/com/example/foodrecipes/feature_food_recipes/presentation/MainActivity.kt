@@ -40,7 +40,7 @@ import com.example.foodrecipes.feature_food_recipes.presentation.components.Favo
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.AccountScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.CategoryScreen
-import com.example.foodrecipes.feature_food_recipes.presentation.screen.ChipGroupExample
+
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.DetailScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.FavouriteScreen
 import com.example.foodrecipes.feature_food_recipes.presentation.screen.HomeScreen
@@ -68,108 +68,111 @@ class MainActivity : ComponentActivity() {
         setContent {
             FoodRecipesTheme {
                 val navController = rememberNavController()
-//                NavHost(
-//                    navController = navController, startDestination =
-//                        if (googleAuthUiClient.getSignedInUser() == null)
-//                            Screen.LoginScreen.route
-//                        else
-//                            Screen.HomeScreen.route
-//                ) {
-//                    composable(Screen.HomeScreen.route) {
-//                        HomeScreen(
-//                            navController = navController,
-//                            userData = googleAuthUiClient.getSignedInUser()
-//                        )
-//                    }
-//                    composable(Screen.CategoryScreen.route) {
-//                        CategoryScreen(navController)
-//                    }
-//                    composable(Screen.FavouriteScreen.route) {
-//                        FavouriteScreen(navController)
-//                    }
-//                    composable(Screen.AccountScreen.route) {
-//                        AccountScreen(navController) {
-//                            lifecycleScope.launch {
-//                                googleAuthUiClient.signOut()
-//                                navController.navigate(Screen.LoginScreen.route)
-//                            }
-//                        }
-//                    }
-//                    composable(
-//                        Screen.DetailScreen.route + "?id={id}",
-//                        arguments = listOf(
-//                            navArgument("id") {
-//                                type = NavType.StringType
-//                                defaultValue = ""
-//                            }
-//                        )
-//                    ) {
-//                        DetailScreen(navController)
-//                    }
-//                    composable(Screen.LoginScreen.route) {
-//                        val viewModel = viewModel<AuthViewModel>()
-//                        val state by viewModel.state.collectAsStateWithLifecycle()
-//
-//                        LaunchedEffect(key1 = Unit) {
-//                            if (googleAuthUiClient.getSignedInUser() != null) {
-//                                navController.navigate(Screen.HomeScreen.route)
-//                            }
-//                        }
-//
-//                        val launcher = rememberLauncherForActivityResult(
-//                            contract = ActivityResultContracts.StartIntentSenderForResult(),
-//                            onResult = { result ->
-//                                if (result.resultCode == RESULT_OK) {
-//                                    lifecycleScope.launch {
-//                                        val signInResult = googleAuthUiClient.signInWithIntent(
-//                                            intent = result.data ?: return@launch
-//                                        )
-//                                        viewModel.onSignInResult(signInResult)
-//                                    }
-//                                }
-//                            }
-//                        )
-//
-//                        LaunchedEffect(key1 = state.isSignInSuccessful) {
-//                            if (state.isSignInSuccessful) {
-//                                navController.navigate(Screen.HomeScreen.route)
-//                                viewModel.resetState()
-//                            }
-//                        }
-//
-//                        SignInScreen(
-//                            state = state,
-//                            onSignInClick = {
-//                                lifecycleScope.launch {
-//                                    val signInIntentSender = googleAuthUiClient.signIn()
-//                                    launcher.launch(
-//                                        IntentSenderRequest.Builder(
-//                                            signInIntentSender ?: return@launch
-//                                        ).build()
-//                                    )
-//                                }
-//                            }
-//                        )
-//                    }
-//
-//
-//                    composable(
-//                        Screen.MealsByCategoryScreen.route + "?category={category}",
-//                        arguments = listOf(
-//                            navArgument("category") {
-//                                type = NavType.StringType
-//                                defaultValue = ""
-//                            }
-//                        )
-//                    ) {
-//                        MealsByCategoryScreen(navController)
-//                    }
-//                }
+                NavHost(
+                    navController = navController, startDestination =
+                        if (googleAuthUiClient.getSignedInUser() == null)
+                            Screen.LoginScreen.route
+                        else
+                        Screen.HomeScreen.route
+                ) {
+                    composable(Screen.HomeScreen.route) {
+                        HomeScreen(
+                            navController = navController,
+                            userData = googleAuthUiClient.getSignedInUser()
+                        )
+                    }
+                    composable(Screen.CategoryScreen.route) {
+                        CategoryScreen(navController)
+                    }
+                    composable(Screen.FavouriteScreen.route) {
+                        FavouriteScreen(navController)
+                    }
+                    composable(Screen.AccountScreen.route) {
+                        AccountScreen(
+                            googleAuthUiClient.getSignedInUser(),
+                            navController
+                        ) {
+                            lifecycleScope.launch {
+                                googleAuthUiClient.signOut()
+                                navController.navigate(Screen.LoginScreen.route)
+                            }
+                        }
+                    }
+                    composable(
+                        Screen.DetailScreen.route + "?id={id}",
+                        arguments = listOf(
+                            navArgument("id") {
+                                type = NavType.StringType
+                                defaultValue = ""
+                            }
+                        )
+                    ) {
+                        DetailScreen(navController)
+                    }
+                    composable(Screen.LoginScreen.route) {
+                        val viewModel = viewModel<AuthViewModel>()
+                        val state by viewModel.state.collectAsStateWithLifecycle()
 
-                HomeScreen(
-                    navController = navController,
-                    userData = googleAuthUiClient.getSignedInUser()
-                )
+                        LaunchedEffect(key1 = Unit) {
+                            if (googleAuthUiClient.getSignedInUser() != null) {
+                                navController.navigate(Screen.HomeScreen.route)
+                            }
+                        }
+
+                        val launcher = rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.StartIntentSenderForResult(),
+                            onResult = { result ->
+                                if (result.resultCode == RESULT_OK) {
+                                    lifecycleScope.launch {
+                                        val signInResult = googleAuthUiClient.signInWithIntent(
+                                            intent = result.data ?: return@launch
+                                        )
+                                        viewModel.onSignInResult(signInResult)
+                                    }
+                                }
+                            }
+                        )
+
+                        LaunchedEffect(key1 = state.isSignInSuccessful) {
+                            if (state.isSignInSuccessful) {
+                                navController.navigate(Screen.HomeScreen.route)
+                                viewModel.resetState()
+                            }
+                        }
+
+                        SignInScreen(
+                            state = state,
+                            onSignInClick = {
+                                lifecycleScope.launch {
+                                    val signInIntentSender = googleAuthUiClient.signIn()
+                                    launcher.launch(
+                                        IntentSenderRequest.Builder(
+                                            signInIntentSender ?: return@launch
+                                        ).build()
+                                    )
+                                }
+                            }
+                        )
+                    }
+
+
+                    composable(
+                        Screen.MealsByCategoryScreen.route + "?category={category}",
+                        arguments = listOf(
+                            navArgument("category") {
+                                type = NavType.StringType
+                                defaultValue = ""
+                            }
+                        )
+                    ) {
+                        MealsByCategoryScreen(navController)
+                    }
+                }
+
+//                HomeScreen(
+//                    navController = navController,
+//                    userData = googleAuthUiClient.getSignedInUser()
+//                )
 //                HomeScreen(rememberNavController())
 //                CategoryScreen(rememberNavController())
             }

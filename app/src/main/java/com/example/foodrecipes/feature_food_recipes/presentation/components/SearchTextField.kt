@@ -30,14 +30,13 @@ import com.example.foodrecipes.util.Responsive
 
 @Composable
 fun SearchTextField(
-//    text: String,
-//    onTextChange: (String) -> Unit,
-//    onSearchClick: () -> Unit,
+    text: String,
+    onValueChange: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     TextField(
-        value = query,
-        onValueChange = { query = it },
+        value = text,
+        onValueChange = onValueChange,
         placeholder = {
             Text(
                 text = "Search",
@@ -60,20 +59,20 @@ fun SearchTextField(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewTextField() {
-    FoodRecipesTheme(dynamicColor = false) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            SearchTextField()
-        }
-
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewTextField() {
+//    FoodRecipesTheme(dynamicColor = false) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(16.dp),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            SearchTextField()
+//        }
+//
+//    }
+//}
 

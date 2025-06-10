@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,8 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.ChipDefaults
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 
 @Composable
@@ -27,13 +31,17 @@ fun Chip(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val chipOptions = listOf("Nam", "Nữ", "Khác")
-    var selectedChip by remember { mutableStateOf<String?>(null) }
     Column {
         FilterChip(
             selected = isSelected,
             onClick = onClick,
-            label = { Text(text = lablel) },
+            label = {
+                Text(
+                    text = lablel,
+                    style = MaterialTheme.typography.bodyMedium
+                        .copy(fontWeight = FontWeight.Medium)
+                )
+            },
             leadingIcon =
                 {
                     if (isSelected)
@@ -44,16 +52,21 @@ fun Chip(
                     else {
                         null
                     }
-                }
+                },
+            colors = FilterChipDefaults.filterChipColors(
+                selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
+                selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondary,
+            )
         )
 
     }
 }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun PreviewChip() {
-        FoodRecipesTheme {
+@Preview(showBackground = true)
+@Composable
+fun PreviewChip() {
+    FoodRecipesTheme {
 //        Chip()
-        }
     }
+}

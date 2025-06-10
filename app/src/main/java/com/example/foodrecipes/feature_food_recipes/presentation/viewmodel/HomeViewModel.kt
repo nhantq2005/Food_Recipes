@@ -30,6 +30,7 @@ class HomeViewModel @Inject constructor(
             getArea()
             getRandomMeal()
             getMealsByArea(state.value.selectedArea)
+            state.value.randomMeal?.let { Log.d("API", it.strCategory) }
         }
 
         Log.d("LIST", state.value.mealsByArea.toString())
@@ -74,6 +75,7 @@ class HomeViewModel @Inject constructor(
                     _state.value = state.value.copy(
                         selectedArea = event.area
                     )
+                    getMealsByArea(event.area)
                 }
             }
         }
@@ -89,14 +91,14 @@ class HomeViewModel @Inject constructor(
 
                         is Result.Loading<*> -> {
                             _state.update {
-                                it.copy(isLoading = true)
+                                it.copy(isLoading = result.isLoading)
                             }
                         }
 
                         is Result.Success<*> -> {
                             result.data?.let { meal ->
                                 _state.update {
-                                    it.copy(meals = meal, isLoading = false)
+                                    it.copy(meals = meal)
                                 }
                             }
                         }
@@ -115,14 +117,14 @@ class HomeViewModel @Inject constructor(
 
                         is Result.Loading<*> -> {
                             _state.update {
-                                it.copy(isLoading = true)
+                                it.copy(isLoading = result.isLoading)
                             }
                         }
 
                         is Result.Success<*> -> {
                             result.data?.let { meal ->
                                 _state.update {
-                                    it.copy(randomMeal = meal,isLoading = false)
+                                    it.copy(randomMeal = meal)
                                 }
                             }
                         }
@@ -141,7 +143,7 @@ class HomeViewModel @Inject constructor(
 
                         is Result.Loading<*> -> {
                             _state.update {
-                                it.copy(isLoading = true)
+                                it.copy(isLoading = result.isLoading)
                             }
                         }
 
@@ -152,8 +154,9 @@ class HomeViewModel @Inject constructor(
                                 }
                             }
                             _state.update {
-                                it.copy(selectedArea = it.area[0].strArea, isLoading = false)
+                                it.copy(selectedArea = it.area[0].strArea)
                             }
+                            getMealsByArea(state.value.selectedArea)
                         }
                     }
                 }
@@ -170,14 +173,14 @@ class HomeViewModel @Inject constructor(
 
                         is Result.Loading<*> -> {
                             _state.update {
-                                it.copy(isLoading = true)
+                                it.copy(isLoading = result.isLoading)
                             }
                         }
 
                         is Result.Success<*> -> {
                             result.data?.let { meals ->
                                 _state.update {
-                                    it.copy(mealsByArea = meals, isLoading = false)
+                                    it.copy(mealsByArea = meals)
                                 }
                             }
                         }
