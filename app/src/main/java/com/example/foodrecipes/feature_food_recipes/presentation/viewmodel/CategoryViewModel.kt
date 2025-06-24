@@ -17,7 +17,7 @@ import javax.inject.Inject
 class CategoryViewModel @Inject constructor(
     private val foodRecipesRepository: FoodRecipesRepository
 ) : ViewModel() {
-    val _state = MutableStateFlow(CategoryState())
+    private val _state = MutableStateFlow(CategoryState())
     val state = _state.asStateFlow()
 
     private var job: Job? = null
@@ -27,7 +27,6 @@ class CategoryViewModel @Inject constructor(
         job = viewModelScope.launch {
             getCategories()
         }
-
     }
 
     private fun getCategories() {

@@ -31,6 +31,7 @@ class GoogleAuthUiClient(
             if(e is CancellationException) throw e
             null
         }
+
         return result?.pendingIntent?.intentSender
     }
 

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+//    alias(libs.plugins.gms)
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
@@ -54,11 +55,11 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     // Dagger - Hilt
-
     implementation(libs.hilt.android)
     implementation(libs.androidx.adapters)
     implementation(libs.androidx.media3.common.ktx)
     implementation(libs.androidx.compose.material)
+    implementation(libs.firebase.firestore.ktx)
 //    implementation("androidx.compose.material3:material3-android:1.3.1")
     kapt(libs.hilt.compiler)
     kapt(libs.androidx.hilt.compiler)
@@ -98,6 +99,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.4.1")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
+    implementation("com.google.firebase:firebase-database")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

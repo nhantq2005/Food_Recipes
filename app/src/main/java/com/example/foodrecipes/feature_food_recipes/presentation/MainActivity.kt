@@ -81,12 +81,15 @@ class MainActivity : ComponentActivity() {
                             userData = googleAuthUiClient.getSignedInUser()
                         )
                     }
+
                     composable(Screen.CategoryScreen.route) {
                         CategoryScreen(navController)
                     }
+
                     composable(Screen.FavouriteScreen.route) {
                         FavouriteScreen(navController)
                     }
+
                     composable(Screen.AccountScreen.route) {
                         AccountScreen(
                             googleAuthUiClient.getSignedInUser(),
@@ -94,10 +97,11 @@ class MainActivity : ComponentActivity() {
                         ) {
                             lifecycleScope.launch {
                                 googleAuthUiClient.signOut()
-                                navController.navigate(Screen.LoginScreen.route)
                             }
+                            navController.navigate(Screen.LoginScreen.route)
                         }
                     }
+
                     composable(
                         Screen.DetailScreen.route + "?id={id}",
                         arguments = listOf(
@@ -109,6 +113,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         DetailScreen(navController)
                     }
+
                     composable(Screen.LoginScreen.route) {
                         val viewModel = viewModel<AuthViewModel>()
                         val state by viewModel.state.collectAsStateWithLifecycle()
@@ -155,7 +160,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-
                     composable(
                         Screen.MealsByCategoryScreen.route + "?category={category}",
                         arguments = listOf(
@@ -168,13 +172,6 @@ class MainActivity : ComponentActivity() {
                         MealsByCategoryScreen(navController)
                     }
                 }
-
-//                HomeScreen(
-//                    navController = navController,
-//                    userData = googleAuthUiClient.getSignedInUser()
-//                )
-//                HomeScreen(rememberNavController())
-//                CategoryScreen(rememberNavController())
             }
         }
     }

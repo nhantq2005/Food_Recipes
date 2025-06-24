@@ -23,7 +23,7 @@ class MealsByCategoryViewModel @OptIn(UnstableApi::class)
     private val foodRecipesRepository: FoodRecipesRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    val _state = MutableStateFlow(MealsByCategoryState())
+    private val _state = MutableStateFlow(MealsByCategoryState())
     val state = _state.asStateFlow()
 
     private var job: Job? = null

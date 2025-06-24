@@ -108,8 +108,7 @@ fun HomeScreen(
                     .fillMaxSize()
                     .shadow(elevation = 10.dp, shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(10.dp),
-//                contentAlignment = Alignment.Center
+                    .padding(10.dp)
             ) {
 //                if (state.isLoading) {
 //                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

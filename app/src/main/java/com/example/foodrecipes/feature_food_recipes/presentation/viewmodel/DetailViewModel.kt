@@ -21,14 +21,13 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val foodRecipesRepository: FoodRecipesRepository,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+):ViewModel() {
     private val _state = MutableStateFlow(DetailState())
     val state = _state.asStateFlow()
 
     private var job: Job? = null
 
     init {
-
         savedStateHandle.get<String>("id")?.let { id ->
             viewModelScope.launch {
                 _state.value = state.value.copy(
@@ -38,7 +37,6 @@ class DetailViewModel @Inject constructor(
             }
 
         }
-
 
     }
 
@@ -60,7 +58,11 @@ class DetailViewModel @Inject constructor(
                         is Result.Success<*> -> {
                             result.data?.let { meal ->
                                 _state.update {
-                                    it.copy(meal = meal, listIngredient = meal.getIngredients(), listMeasure = meal.getMeasures())
+                                    it.copy(
+                                        meal = meal,
+                                        listIngredient = meal.getIngredients(),
+                                        listMeasure = meal.getMeasures()
+                                    )
                                 }
                             }
                             Log.d("DetailViewModel", "getMealById: ${state.value.listIngredient}")
