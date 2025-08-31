@@ -1,5 +1,6 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,28 +27,34 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.foodrecipes.feature_food_recipes.domain.model.Meal
 import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
+import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireStoreViewModel
 import com.example.foodrecipes.util.Responsive
 
 @Composable
 fun SmallMealItem(
     mealItem: Any,
     navController: NavController
-){
-    var mealID:String = ""
-    var mealName:String = ""
-    var mealThumb:String = ""
+) {
+    val fireStoreViewModel = FireStoreViewModel()
+
+    var mealID: String = ""
+    var mealName: String = ""
+    var mealThumb: String = ""
     //Check datatype
-    when (mealItem){
+    when (mealItem) {
         is MealItem -> {
             mealID = mealItem.idMeal
             mealName = mealItem.strMeal
             mealThumb = mealItem.strMealThumb
         }
+
         is Meal -> {
             mealID = mealItem.idMeal
             mealName = mealItem.strMeal
@@ -63,7 +70,7 @@ fun SmallMealItem(
             .clickable {
                 navController.navigate(
                     Screen.DetailScreen.route
-                        + "?id=${mealID}"
+                            + "?id=${mealID}"
                 )
             },
         colors = CardDefaults.cardColors(
@@ -89,14 +96,31 @@ fun SmallMealItem(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = mealName,
+                Text(
+                    text = mealName,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Medium,
                         fontSize = Responsive.scaledSp(18)
                     ),
                     modifier = Modifier.fillMaxWidth(0.8f),
-                    overflow = TextOverflow.Ellipsis)
-                Icon(Icons.Default.AddCircleOutline, contentDescription = "Add Icon")
+                    overflow = TextOverflow.Ellipsis
+                )
+                Icon(
+                    Icons.Default.AddCircleOutline,
+                    contentDescription = "Add Icon",
+                    modifier = Modifier
+                        .clickable {
+                            fireStoreViewModel.onEvent(
+                                FireStoreEvent.AddMeal(
+                                    MealItem(
+                                        idMeal = mealID,
+                                        strMeal = mealName,
+                                        strMealThumb = mealThumb
+                                    )
+                                )
+                            )
+                            Log.d("MealID", mealID)
+                        })
             }
         }
     }

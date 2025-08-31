@@ -45,6 +45,7 @@ import com.example.foodrecipes.feature_food_recipes.presentation.components.Smal
 import com.example.foodrecipes.feature_food_recipes.presentation.event.HomeEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.HomeState
 import com.example.foodrecipes.feature_food_recipes.presentation.state.UserData
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireStoreViewModel
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.HomeViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
@@ -56,6 +57,7 @@ fun HomeScreen(
 ) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val state by homeViewModel.state.collectAsState()
+//    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
 
     BottomBar(navController = navController) {
         Column(

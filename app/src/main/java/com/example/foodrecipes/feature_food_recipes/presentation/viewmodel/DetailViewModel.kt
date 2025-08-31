@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(
+class
+DetailViewModel @Inject constructor(
     private val foodRecipesRepository: FoodRecipesRepository,
     private val savedStateHandle: SavedStateHandle
 ):ViewModel() {
