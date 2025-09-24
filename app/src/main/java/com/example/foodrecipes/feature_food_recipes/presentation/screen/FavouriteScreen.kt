@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,6 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesomeMosaic
@@ -22,6 +26,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -31,13 +37,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.foodrecipes.R
 import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
 import com.example.foodrecipes.feature_food_recipes.presentation.components.FavouriteButton
+import com.example.foodrecipes.feature_food_recipes.presentation.components.LargeMealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SearchTextField
+import com.example.foodrecipes.feature_food_recipes.presentation.components.SmallMealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.event.HomeEvent
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FavouriteViewModel
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.HomeViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
 
@@ -46,6 +57,8 @@ import com.example.foodrecipes.util.Responsive
 fun FavouriteScreen(
     navController: NavController
 ) {
+    val favouriteViewModel = hiltViewModel<FavouriteViewModel>()
+    val state by favouriteViewModel.state.collectAsState()
     BottomBar(
         navController
     ) {
@@ -53,7 +66,8 @@ fun FavouriteScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight(0.2f)
+                modifier = Modifier
+                    .fillMaxHeight(0.2f)
                     .padding(Responsive.scaledDp(10))
             ) {
                 Row(
@@ -78,7 +92,7 @@ fun FavouriteScreen(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 SearchTextField(
-                    "state.searhWord",
+                    state.listFavourite.size.toString(),
                     onValueChange = {
 
                     }
@@ -86,14 +100,25 @@ fun FavouriteScreen(
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .shadow(elevation = 10.dp, shape = RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(10.dp)
-        ) {
-        }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(10.dp)
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(7.dp),
+                ) {
+                    items(state.listFavourite) { meal ->
+                        SmallMealItem(mealItem = meal, navController = navController)
+                    }
+
+                }
+            }
         }
     }
 }

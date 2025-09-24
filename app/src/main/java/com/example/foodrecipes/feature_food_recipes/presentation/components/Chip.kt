@@ -29,7 +29,8 @@ import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 fun Chip(
     lablel: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isShowIcon: Boolean = true
 ) {
     Column {
         FilterChip(
@@ -44,7 +45,7 @@ fun Chip(
             },
             leadingIcon =
                 {
-                    if (isSelected)
+                    if (isSelected && isShowIcon)
                         Icon(
                             Icons.Default.Check,
                             contentDescription = null

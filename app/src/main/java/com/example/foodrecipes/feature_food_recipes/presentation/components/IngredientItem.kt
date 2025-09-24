@@ -17,16 +17,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.foodrecipes.feature_food_recipes.domain.util.convertIngredientName
+import com.example.foodrecipes.util.Responsive
 
 @Composable
 fun IngredientItem(strIngredient: String, strMeasure: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(80.dp)
             .shadow(5.dp, RoundedCornerShape(5.dp)),
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(
@@ -50,9 +53,20 @@ fun IngredientItem(strIngredient: String, strMeasure: String) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(strIngredient)
+                Text(
+                    strIngredient,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontSize = Responsive.scaledSp(15),
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(strMeasure)
+                Text(strMeasure,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontSize = Responsive.scaledSp(13),
+                    ),
+                    textAlign = TextAlign.Center)
 
             }
         }

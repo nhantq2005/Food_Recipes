@@ -3,7 +3,9 @@ package com.example.foodrecipes.feature_food_recipes.presentation.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.content.MediaType.Companion.Text
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,25 +42,28 @@ import com.example.foodrecipes.util.Responsive
 @Composable
 fun MealsByCategoryScreen(
     navController: NavController
-){
+) {
     val viewModel = hiltViewModel<MealsByCategoryViewModel>()
     val state = viewModel.state.collectAsState()
 
     BottomBar(
         navController = navController
     ) {
-        if(state.value.isLoading){
-            CircularProgressIndicator()
-        }
-        else {
+        if (state.value.isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp)
                     .background(MaterialTheme.colorScheme.surface)
             ) {
                 Row(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(15.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
@@ -83,6 +88,7 @@ fun MealsByCategoryScreen(
                     columns = GridCells.Fixed(2),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(7.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(5.dp)

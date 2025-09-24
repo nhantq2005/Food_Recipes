@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodrecipes.feature_food_recipes.data.model.mapper.getIngredients
 import com.example.foodrecipes.feature_food_recipes.data.model.mapper.getMeasures
 import com.example.foodrecipes.feature_food_recipes.domain.repository.FoodRecipesRepository
+import com.example.foodrecipes.feature_food_recipes.presentation.event.DetailEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.DetailState
 import com.example.foodrecipes.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +40,18 @@ DetailViewModel @Inject constructor(
 
         }
 
+    }
+
+    fun onEvent(event: DetailEvent) {
+        when (event) {
+            is DetailEvent.changeOption -> {
+                viewModelScope.launch {
+                    _state.value = state.value.copy(
+                        selectedOption = event.option
+                    )
+                }
+            }
+        }
     }
 
 

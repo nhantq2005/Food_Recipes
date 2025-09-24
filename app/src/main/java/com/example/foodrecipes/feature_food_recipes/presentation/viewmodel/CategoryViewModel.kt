@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//@HiltViewModel
+@HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val foodRecipesRepository: FoodRecipesRepository
 ) : ViewModel() {

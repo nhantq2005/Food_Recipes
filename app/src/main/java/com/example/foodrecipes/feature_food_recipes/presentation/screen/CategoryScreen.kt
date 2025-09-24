@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,7 +52,7 @@ fun CategoryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp)
+                .padding(7.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             Row(
@@ -87,8 +88,8 @@ fun CategoryScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 5.dp)
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(7.dp)
                 ) {
                     items(state.value.categories) { category ->
                         CategoryItem(category = category, navController = navController)

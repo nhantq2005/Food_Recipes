@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 class FireStoreViewModel() : ViewModel() {
@@ -78,27 +79,48 @@ class FireStoreViewModel() : ViewModel() {
         }
     }
 
-    fun getMealsForUser():List<MealItem> {
-        val meals = mutableListOf<MealItem>()
-        if (uid != null) {
+    suspend fun getMealsForUser(): List<MealItem> {
+//        val meals = mutableListOf<MealItem>()
+//        if (uid != null) {
+//            db.collection("foodrecipesdb").document(uid)
+//                .collection("meals")
+//                .get()
+//                .addOnSuccessListener { documents ->
+//                    for (doc in documents) {
+//                        val idMeal = doc.getString("idMeal")
+//                        val strMeal = doc.getString("strMeal")
+//                        val strMealThumb = doc.getString("strMealThumb")
+//                        meals.add(MealItem(idMeal!!, strMeal!!, strMealThumb!!))
+//                    }
+//                    myAdapter.submitList(meals)
+//                }
+//                .addOnFailureListener { e ->
+//                    Log.w("Firestore", "Error getting foods", e)
+//                }
+//        }
+//        Log.d("FavouriteViewModel", "List of meals: $meals")
+//        return meals
+        if (uid == null) return emptyList()
 
-            db.collection("foodrecipesdb").document(uid)
+        return try {
+            val snapshot = db.collection("foodrecipesdb").document(uid)
                 .collection("meals")
                 .get()
-                .addOnSuccessListener { documents ->
-                    for (doc in documents) {
-                        val idMeal = doc.getString("idMeal")
-                        val strMeal = doc.getString("strMeal")
-                        val strMealThumb = doc.getString("strMealThumb")
-                        meals.add(MealItem(idMeal!!, strMeal!!, strMealThumb!!))
-                    }
+                .await() // chờ kết quả Firestore trả về
 
+            val meals = snapshot.map { doc ->
+                MealItem(
+                    doc.getString("idMeal") ?: "",
+                    doc.getString("strMeal") ?: "",
+                    doc.getString("strMealThumb") ?: ""
+                )
+            }
 
-                }
-                .addOnFailureListener { e ->
-                    Log.w("Firestore", "Error getting foods", e)
-                }
+            Log.d("FavouriteViewModel", "List of meals: $meals")
+            meals
+        } catch (e: Exception) {
+            Log.w("Firestore", "Error getting foods", e)
+            emptyList()
         }
-        return meals
     }
 }

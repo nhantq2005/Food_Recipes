@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                         if (googleAuthUiClient.getSignedInUser() == null)
                             Screen.LoginScreen.route
                         else
-                        Screen.HomeScreen.route
+                            Screen.HomeScreen.route
                 ) {
                     composable(Screen.HomeScreen.route) {
                         HomeScreen(
@@ -92,14 +92,15 @@ class MainActivity : ComponentActivity() {
 
                     composable(Screen.AccountScreen.route) {
                         AccountScreen(
-                            googleAuthUiClient.getSignedInUser(),
-                            navController
-                        ) {
-                            lifecycleScope.launch {
-                                googleAuthUiClient.signOut()
+                            userData = googleAuthUiClient.getSignedInUser(),
+                            navController = navController,
+                            onSignOut = {
+                                lifecycleScope.launch {
+                                    googleAuthUiClient.signOut()
+                                }
+                                navController.navigate(Screen.LoginScreen.route)
                             }
-                            navController.navigate(Screen.LoginScreen.route)
-                        }
+                        )
                     }
 
                     composable(
