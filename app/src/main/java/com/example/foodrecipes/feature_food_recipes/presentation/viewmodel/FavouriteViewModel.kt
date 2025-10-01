@@ -7,6 +7,7 @@ import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
 import com.example.foodrecipes.feature_food_recipes.domain.repository.FoodRecipesRepository
 import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.FavouriteState
+import com.example.foodrecipes.util.Collections
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,7 @@ class FavouriteViewModel @Inject constructor():ViewModel() {
 
     init {
         viewModelScope.launch {
-            val meals = fireStoreViewModel.getMealsForUser()
+            val meals = fireStoreViewModel.getMealsForUser(Collections.Meals.collectionName)
             _state.value = state.value.copy(listFavourite = meals)
             Log.d("Favourite", "List favourite: $meals")
         }

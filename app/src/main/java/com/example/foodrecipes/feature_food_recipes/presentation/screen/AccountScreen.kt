@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,10 +33,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
+import com.example.foodrecipes.feature_food_recipes.presentation.components.SmallMealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.state.UserData
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.AccountViewModel
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.DetailViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
 
@@ -44,6 +50,8 @@ fun AccountScreen(
     navController: NavController,
     onSignOut: () -> Unit
 ) {
+    val accountViewModel = hiltViewModel<AccountViewModel>()
+    val state = accountViewModel.state.collectAsState()
     userData?.profilePictureUrl?.let { Log.d("IMG", it) }
     BottomBar(
         navController
@@ -90,8 +98,17 @@ fun AccountScreen(
                     text = "History",
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface, fontSize = Responsive.scaledSp(20))
                 )
-                LazyRow {
-
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.fillMaxHeight(0.6f)
+                ) {
+                    items(state.value.currentMeals){meal->
+                        SmallMealItem(
+                            mealItem = meal,
+                            navController = navController,
+                            icon = {}
+                        )
+                    }
                 }
                 Text(
                     text = "Option",

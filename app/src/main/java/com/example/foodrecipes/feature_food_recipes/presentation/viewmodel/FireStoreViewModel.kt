@@ -3,8 +3,10 @@ package com.example.foodrecipes.feature_food_recipes.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodrecipes.feature_food_recipes.domain.model.Meal
 import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
+import com.example.foodrecipes.util.Collections
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +24,7 @@ class FireStoreViewModel() : ViewModel() {
     init {
         job?.cancel()
         job = viewModelScope.launch {
-            getMealsForUser()
+            getMealsForUser(Collections.Meals.collectionName)
         }
     }
 
@@ -40,10 +42,16 @@ class FireStoreViewModel() : ViewModel() {
                 }
             }
 
-            FireStoreEvent.GetMeal -> {
+            is FireStoreEvent.GetMeal -> {
                 job?.cancel()
                 job = viewModelScope.launch {
-                    getMealsForUser()
+                    getMealsForUser(event.collection)
+                }
+            }
+
+            is FireStoreEvent.AddCurrentMeal -> {
+                viewModelScope.launch {
+                    addRecentMeal(event.meal)
                 }
             }
         }
@@ -64,7 +72,7 @@ class FireStoreViewModel() : ViewModel() {
         }
     }
 
-    fun deleteMeal(mealId: String) {
+    private fun deleteMeal(mealId: String) {
         if (uid != null) {
             db.collection("foodrecipesdb").document(uid)
                 .collection("meals")
@@ -79,32 +87,13 @@ class FireStoreViewModel() : ViewModel() {
         }
     }
 
-    suspend fun getMealsForUser(): List<MealItem> {
-//        val meals = mutableListOf<MealItem>()
-//        if (uid != null) {
-//            db.collection("foodrecipesdb").document(uid)
-//                .collection("meals")
-//                .get()
-//                .addOnSuccessListener { documents ->
-//                    for (doc in documents) {
-//                        val idMeal = doc.getString("idMeal")
-//                        val strMeal = doc.getString("strMeal")
-//                        val strMealThumb = doc.getString("strMealThumb")
-//                        meals.add(MealItem(idMeal!!, strMeal!!, strMealThumb!!))
-//                    }
-//                    myAdapter.submitList(meals)
-//                }
-//                .addOnFailureListener { e ->
-//                    Log.w("Firestore", "Error getting foods", e)
-//                }
-//        }
-//        Log.d("FavouriteViewModel", "List of meals: $meals")
-//        return meals
+    suspend fun getMealsForUser(collection: String): List<MealItem> {
         if (uid == null) return emptyList()
 
         return try {
             val snapshot = db.collection("foodrecipesdb").document(uid)
-                .collection("meals")
+//                .collection("meals")
+                .collection(collection)
                 .get()
                 .await() // chờ kết quả Firestore trả về
 
@@ -121,6 +110,35 @@ class FireStoreViewModel() : ViewModel() {
         } catch (e: Exception) {
             Log.w("Firestore", "Error getting foods", e)
             emptyList()
+        }
+    }
+
+    fun addRecentMeal(meal: Meal) {
+        if (uid != null) {
+            Log.d("CurrentMeal", "addRecentMeal: $meal")
+            val historyRef = db.collection("foodrecipesdb")
+                    .document(uid)
+                    .collection("current")
+
+
+            historyRef.orderBy("timestamp")
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    if (snapshot.size() >= 10) {
+                        val oldest = snapshot.documents.first()
+                        historyRef.document(oldest.id).delete()
+                    }
+
+                    val mealMap = hashMapOf(
+                        "idMeal" to meal.idMeal,
+                        "strMeal" to meal.strMeal,
+                        "strMealThumb" to meal.strMealThumb,
+                        "timestamp" to System.currentTimeMillis()
+                    )
+
+                    historyRef
+                        .add(mealMap)
+                }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.foodrecipes.feature_food_recipes.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,14 +21,17 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.AutoAwesomeMosaic
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -41,16 +45,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.foodrecipes.R
+import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
 import com.example.foodrecipes.feature_food_recipes.presentation.components.FavouriteButton
 import com.example.foodrecipes.feature_food_recipes.presentation.components.LargeMealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SearchTextField
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SmallMealItem
+import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.event.HomeEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FavouriteViewModel
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireStoreViewModel
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.HomeViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -59,6 +67,8 @@ fun FavouriteScreen(
 ) {
     val favouriteViewModel = hiltViewModel<FavouriteViewModel>()
     val state by favouriteViewModel.state.collectAsState()
+    val viewModel = rememberCoroutineScope()
+    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
     BottomBar(
         navController
     ) {
@@ -105,16 +115,31 @@ fun FavouriteScreen(
                     .fillMaxSize()
                     .shadow(elevation = 10.dp, shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(10.dp)
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(7.dp),
+                    contentPadding = PaddingValues(10.dp),
                 ) {
                     items(state.listFavourite) { meal ->
-                        SmallMealItem(mealItem = meal, navController = navController)
+                        SmallMealItem(mealItem = meal, navController = navController, icon = {
+                            Image(
+                                painter = painterResource(R.drawable.delete),
+                                contentDescription = "Delete Icon",
+                                modifier = Modifier
+                                    .size(Responsive.scaledDp(24))
+                                    .clickable {
+//                                        viewModel.launch {
+                                            fireStoreViewModel.onEvent(
+                                                FireStoreEvent.DeleteMeal(
+                                                    mealId = meal.idMeal
+                                                )
+                                            )
+//                                        }
+                                    }
+                            )
+                        })
                     }
 
                 }

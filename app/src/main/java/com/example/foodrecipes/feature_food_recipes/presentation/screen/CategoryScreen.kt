@@ -52,11 +52,10 @@ fun CategoryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(7.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             Row(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -89,7 +88,7 @@ fun CategoryScreen(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
                         .fillMaxWidth(),
-                    contentPadding = PaddingValues(7.dp)
+                    contentPadding = PaddingValues(10.dp)
                 ) {
                     items(state.value.categories) { category ->
                         CategoryItem(category = category, navController = navController)

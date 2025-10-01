@@ -1,6 +1,7 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.content.MediaType.Companion.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.AutoAwesomeMosaic
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,24 +29,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
 import com.example.foodrecipes.feature_food_recipes.presentation.components.CategoryItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SmallMealItem
+import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
+import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireStoreViewModel
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.MealsByCategoryViewModel
 import com.example.foodrecipes.util.Responsive
+import kotlinx.coroutines.launch
 
 @Composable
 fun MealsByCategoryScreen(
     navController: NavController
 ) {
-    val viewModel = hiltViewModel<MealsByCategoryViewModel>()
-    val state = viewModel.state.collectAsState()
+    val mealByCategoryViewModel = hiltViewModel<MealsByCategoryViewModel>()
+    val state = mealByCategoryViewModel.state.collectAsState()
+    val viewModel = rememberCoroutineScope()
+    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
 
     BottomBar(
         navController = navController
@@ -88,13 +97,29 @@ fun MealsByCategoryScreen(
                     columns = GridCells.Fixed(2),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(7.dp),
+                    contentPadding = PaddingValues(10.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(5.dp)
                 ) {
                     items(state.value.meals) { meal ->
-                        SmallMealItem(mealItem = meal, navController = navController)
+                        SmallMealItem(mealItem = meal, navController = navController, icon = {
+                            Icon(
+                                Icons.Default.AddCircleOutline,
+                                contentDescription = "Add Icon",
+                                modifier = Modifier
+                                    .clickable {
+                                            fireStoreViewModel.onEvent(
+                                                FireStoreEvent.AddMeal(
+                                                    MealItem(
+                                                        idMeal = meal.idMeal,
+                                                        strMeal = meal.strMeal,
+                                                        strMealThumb = meal.strMealThumb
+                                                    )
+                                                )
+                                            )
+                                    }
+                            )
+                        })
                         Spacer(modifier = Modifier.padding(10.dp))
                     }
 

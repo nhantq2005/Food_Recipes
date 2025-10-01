@@ -3,9 +3,11 @@ package com.example.foodrecipes.feature_food_recipes.presentation.screen
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,11 +22,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircleOutline
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -37,11 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.foodrecipes.R
+import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.BottomBar
 import com.example.foodrecipes.feature_food_recipes.presentation.components.Chip
 import com.example.foodrecipes.feature_food_recipes.presentation.components.LargeMealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SearchTextField
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SmallMealItem
+import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.event.HomeEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.HomeState
 import com.example.foodrecipes.feature_food_recipes.presentation.state.UserData
@@ -49,6 +57,7 @@ import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireS
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.HomeViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -71,7 +80,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column{
+                    Column {
                         Text(
                             text = "Hello ${userData?.username}",
                             style = MaterialTheme.typography.bodyMedium.copy(
@@ -110,7 +119,7 @@ fun HomeScreen(
                     .fillMaxSize()
                     .shadow(elevation = 10.dp, shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(10.dp)
+                    .padding(0.dp)
             ) {
 //                if (state.isLoading) {
 //                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -129,7 +138,7 @@ fun HomeScreen(
                 else
                     MealRecommendation(
                         state = state,
-                        viewModel = homeViewModel,
+                        homeViewModel = homeViewModel,
                         navController = navController
                     )
             }
@@ -142,13 +151,36 @@ fun MealsResult(
     state: HomeState,
     navController: NavController
 ) {
+    val viewModel = rememberCoroutineScope()
+    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(10.dp)
     ) {
         items(state.meals) { mealItem ->
-            SmallMealItem(mealItem = mealItem, navController = navController)
+            SmallMealItem(mealItem = mealItem, navController = navController, icon = {
+                Icon(
+                    Icons.Default.AddCircleOutline,
+                    contentDescription = "Add Icon",
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.launch {
+                                fireStoreViewModel.onEvent(
+                                    FireStoreEvent.AddMeal(
+                                        MealItem(
+                                            idMeal = mealItem.idMeal,
+                                            strMeal = mealItem.strMeal,
+                                            strMealThumb = mealItem.strMealThumb
+                                        )
+                                    )
+                                )
+                            }
+                        }
+                )
+            }
+            )
         }
     }
 }
@@ -156,13 +188,16 @@ fun MealsResult(
 @Composable
 fun MealRecommendation(
     state: HomeState,
-    viewModel: HomeViewModel,
+    homeViewModel: HomeViewModel,
     navController: NavController
 ) {
+    val viewModel = rememberCoroutineScope()
+    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(10.dp)
     ) {
         item(span = { GridItemSpan(2) }, key = "header_today_meal") {
             Column {
@@ -197,7 +232,7 @@ fun MealRecommendation(
                             lablel = aera.strArea,
                             isSelected = aera.strArea == state.selectedArea,
                             onClick = {
-                                viewModel.onEvent(HomeEvent.ChangeAera(area = aera.strArea))
+                                homeViewModel.onEvent(HomeEvent.ChangeAera(area = aera.strArea))
                                 Log.d("SELECTED AREA", state.selectedArea)
                             }
                         )
@@ -206,7 +241,27 @@ fun MealRecommendation(
             }
         }
         items(state.mealsByArea) { mealItem ->
-            SmallMealItem(mealItem = mealItem, navController = navController)
+            SmallMealItem(mealItem = mealItem, navController = navController, icon = {
+                Icon(
+                    Icons.Default.AddCircleOutline,
+                    contentDescription = "Add Icon",
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.launch {
+                                fireStoreViewModel.onEvent(
+                                    FireStoreEvent.AddMeal(
+                                        MealItem(
+                                            idMeal = mealItem.idMeal,
+                                            strMeal = mealItem.strMeal,
+                                            strMealThumb = mealItem.strMealThumb
+                                        )
+                                    )
+                                )
+                            }
+                        }
+                )
+            }
+            )
         }
     }
 }

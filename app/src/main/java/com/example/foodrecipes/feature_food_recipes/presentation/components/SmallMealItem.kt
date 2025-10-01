@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,14 +37,16 @@ import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStore
 import com.example.foodrecipes.feature_food_recipes.presentation.navigation.Screen
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireStoreViewModel
 import com.example.foodrecipes.util.Responsive
+import kotlinx.coroutines.launch
 
 @Composable
 fun SmallMealItem(
     mealItem: Any,
-    navController: NavController
+    navController: NavController,
+    icon: @Composable () -> Unit
 ) {
     val fireStoreViewModel = FireStoreViewModel()
-
+    val viewModel = rememberCoroutineScope()
     var mealID: String = ""
     var mealName: String = ""
     var mealThumb: String = ""
@@ -105,22 +108,26 @@ fun SmallMealItem(
                     modifier = Modifier.fillMaxWidth(0.8f),
                     overflow = TextOverflow.Ellipsis
                 )
-                Icon(
-                    Icons.Default.AddCircleOutline,
-                    contentDescription = "Add Icon",
-                    modifier = Modifier
-                        .clickable {
-                            fireStoreViewModel.onEvent(
-                                FireStoreEvent.AddMeal(
-                                    MealItem(
-                                        idMeal = mealID,
-                                        strMeal = mealName,
-                                        strMealThumb = mealThumb
-                                    )
-                                )
-                            )
-                            Log.d("MealID", mealID)
-                        })
+//                Icon(
+//                    Icons.Default.AddCircleOutline,
+//                    contentDescription = "Add Icon",
+//                    modifier = Modifier
+//                        .clickable {
+//                            viewModel.launch {
+//                                fireStoreViewModel.onEvent(
+//                                    FireStoreEvent.AddMeal(
+//                                        MealItem(
+//                                            idMeal = mealID,
+//                                            strMeal = mealName,
+//                                            strMealThumb = mealThumb
+//                                        )
+//                                    )
+//                                )
+//                                Log.d("MealID", mealID)
+//                            }
+//                        }
+//                )
+                icon()
             }
         }
     }

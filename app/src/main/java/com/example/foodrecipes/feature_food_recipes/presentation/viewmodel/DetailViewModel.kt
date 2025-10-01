@@ -8,7 +8,9 @@ import com.example.foodrecipes.feature_food_recipes.data.model.mapper.getIngredi
 import com.example.foodrecipes.feature_food_recipes.data.model.mapper.getMeasures
 import com.example.foodrecipes.feature_food_recipes.domain.repository.FoodRecipesRepository
 import com.example.foodrecipes.feature_food_recipes.presentation.event.DetailEvent
+import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.DetailState
+import com.example.foodrecipes.util.Collections
 import com.example.foodrecipes.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -26,6 +28,7 @@ DetailViewModel @Inject constructor(
 ):ViewModel() {
     private val _state = MutableStateFlow(DetailState())
     val state = _state.asStateFlow()
+    val fireStoreViewModel = FireStoreViewModel()
 
     private var job: Job? = null
 
@@ -36,6 +39,8 @@ DetailViewModel @Inject constructor(
                     id = id
                 )
                 getMealById()
+
+
             }
 
         }
@@ -80,6 +85,11 @@ DetailViewModel @Inject constructor(
                                 }
                             }
                             Log.d("DetailViewModel", "getMealById: ${state.value.listIngredient}")
+//                            viewModelScope.launch {
+                                state.value.meal?.let { FireStoreEvent.AddCurrentMeal(it) }
+                                    ?.let { fireStoreViewModel.onEvent(it) }
+//                            }
+                            Log.d("CurrentMeal", "init: ${state.value.meal}")
                         }
                     }
                 }
