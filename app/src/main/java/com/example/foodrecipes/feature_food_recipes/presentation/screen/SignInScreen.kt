@@ -83,17 +83,15 @@ fun SignInScreen(
                         fontSize = Responsive.scaledSp(60),
                         lineHeight = 70.sp,
                         color = MaterialTheme.colorScheme.onBackground
-                    ),
-
                     )
+                )
             }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .shadow(10.dp, shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(Responsive.scaledDp(16)),
-//                verticalArrangement = Arrangement.SpaceEvenly
+                    .padding(Responsive.scaledDp(16))
             ) {
                 Text(
                     text = "Welcome\nBack!", style = MaterialTheme.typography.titleMedium.copy(

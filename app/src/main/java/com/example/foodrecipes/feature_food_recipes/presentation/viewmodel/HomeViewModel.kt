@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foodrecipes.feature_food_recipes.domain.repository.FoodRecipesRepository
+import com.example.foodrecipes.feature_food_recipes.domain.repository.MealRepository
 import com.example.foodrecipes.feature_food_recipes.presentation.event.HomeEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.HomeState
 import com.example.foodrecipes.util.Result
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val foodRecipesRepository: FoodRecipesRepository
+    private val foodRecipesRepository: FoodRecipesRepository,
+    private val mealRepository: MealRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
@@ -77,6 +79,10 @@ class HomeViewModel @Inject constructor(
                     )
                     getMealsByArea(event.area)
                 }
+            }
+
+            is HomeEvent.AddMeal -> {
+                mealRepository.addMeal(event.mealItem)
             }
         }
     }

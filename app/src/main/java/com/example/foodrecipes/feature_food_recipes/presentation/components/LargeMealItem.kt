@@ -40,7 +40,6 @@ fun LargeMealItem(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    Log.d("IMG", meal.strTags)
     Card(
         modifier = modifier
             .fillMaxWidth()

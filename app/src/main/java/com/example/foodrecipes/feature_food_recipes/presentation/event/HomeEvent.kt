@@ -1,5 +1,7 @@
 package com.example.foodrecipes.feature_food_recipes.presentation.event
 
+import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
+
 sealed class HomeEvent {
     data class EnteredWord(val word: String) : HomeEvent()
     data class ChangeAera(val area: String) : HomeEvent()
@@ -7,4 +9,5 @@ sealed class HomeEvent {
     data class GetMealByArea(val area: String) : HomeEvent()
     data object GetArea : HomeEvent()
     data object GetRandomMeal: HomeEvent()
+    data class AddMeal(val mealItem: MealItem) : HomeEvent()
 }

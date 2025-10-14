@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import com.example.foodrecipes.feature_food_recipes.domain.repository.FoodRecipesRepository
+import com.example.foodrecipes.feature_food_recipes.domain.repository.MealRepository
+import com.example.foodrecipes.feature_food_recipes.presentation.event.MealByCategoryEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.MealsByCategoryState
 import com.example.foodrecipes.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +23,8 @@ import javax.inject.Inject
 class MealsByCategoryViewModel @OptIn(UnstableApi::class)
 @Inject constructor(
     private val foodRecipesRepository: FoodRecipesRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val mealRepository: MealRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(MealsByCategoryState())
     val state = _state.asStateFlow()
@@ -35,6 +38,14 @@ class MealsByCategoryViewModel @OptIn(UnstableApi::class)
                     category = category
                 )
                 getMealsByCategory()
+            }
+        }
+    }
+
+    fun onEvent(event: MealByCategoryEvent) {
+        when (event) {
+            is MealByCategoryEvent.AddMeal -> {
+                mealRepository.addMeal(event.meal)
             }
         }
     }

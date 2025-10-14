@@ -94,7 +94,6 @@ fun CategoryScreen(
                         CategoryItem(category = category, navController = navController)
                         Spacer(modifier = Modifier.padding(10.dp))
                     }
-
                 }
             }
         }

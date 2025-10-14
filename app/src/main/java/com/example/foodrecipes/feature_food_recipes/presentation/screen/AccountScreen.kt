@@ -3,12 +3,15 @@ package com.example.foodrecipes.feature_food_recipes.presentation.screen
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -92,27 +95,41 @@ fun AccountScreen(
                     .fillMaxSize()
                     .shadow(elevation = 10.dp, shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(16.dp)
+                    .padding(10.dp)
             ) {
                 Text(
-                    text = "History",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface, fontSize = Responsive.scaledSp(20))
+                    text = "Recent Recipes",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = Responsive.scaledSp(20)
+                    )
                 )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxHeight(0.6f)
+                    contentPadding = PaddingValues(5.dp),
+//                    modifier = Modifier.height(250.dp)
                 ) {
-                    items(state.value.currentMeals){meal->
-                        SmallMealItem(
-                            mealItem = meal,
-                            navController = navController,
-                            icon = {}
-                        )
+
+                    items(state.value.currentMeals) { meal ->
+                        Box(
+                            modifier = Modifier
+                                .width(200.dp)
+                        ) {
+                            SmallMealItem(
+                                mealItem = meal,
+                                navController = navController,
+                                icon = {
+                                }
+                            )
+                        }
                     }
                 }
                 Text(
-                    text = "Option",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface, fontSize = Responsive.scaledSp(20))
+                    text = "Setting",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = Responsive.scaledSp(20)
+                    )
                 )
                 Button(onClick = onSignOut, modifier = Modifier.fillMaxWidth()) {
                     Icon(Icons.Default.Output, contentDescription = "Sign Out")

@@ -54,10 +54,8 @@ import com.example.foodrecipes.feature_food_recipes.presentation.components.Chip
 import com.example.foodrecipes.feature_food_recipes.presentation.components.DetailItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.IngredientItem
 import com.example.foodrecipes.feature_food_recipes.presentation.event.DetailEvent
-import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.DetailState
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.DetailViewModel
-import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireStoreViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
 import kotlinx.coroutines.launch
@@ -69,8 +67,8 @@ fun DetailScreen(
     val detailViewModel = hiltViewModel<DetailViewModel>()
     val state = detailViewModel.state.collectAsState()
     val context = LocalContext.current
-    val viewModel = rememberCoroutineScope()
-    val fireStoreViewModel = FireStoreViewModel()
+//    val viewModel = rememberCoroutineScope()
+//    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
 
     val detailItems = remember {
         listOf(
@@ -154,17 +152,26 @@ fun DetailScreen(
                                 Icons.Default.AddCircleOutline, contentDescription = "Add fav meal",
                                 modifier = Modifier
                                     .clickable {
-                                        viewModel.launch {
-                                            fireStoreViewModel.onEvent(
-                                                FireStoreEvent.AddMeal(
-                                                    MealItem(
-                                                        idMeal = state.value.meal?.idMeal.toString(),
-                                                        strMeal = state.value.meal?.strMeal.toString(),
-                                                        strMealThumb = state.value.meal?.strMealThumb.toString()
-                                                    )
+                                        detailViewModel.onEvent(
+                                            DetailEvent.addMeal(
+                                                MealItem(
+                                                    idMeal = state.value.meal?.idMeal.toString(),
+                                                    strMeal = state.value.meal?.strMeal.toString(),
+                                                    strMealThumb = state.value.meal?.strMealThumb.toString()
                                                 )
                                             )
-                                        }
+                                        )
+//                                        viewModel.launch {
+//                                            fireStoreViewModel.onEvent(
+//                                                FireStoreEvent.AddMeal(
+//                                                    MealItem(
+//                                                        idMeal = state.value.meal?.idMeal.toString(),
+//                                                        strMeal = state.value.meal?.strMeal.toString(),
+//                                                        strMealThumb = state.value.meal?.strMealThumb.toString()
+//                                                    )
+//                                                )
+//                                            )
+//                                        }
                                     }
                                     .background(
                                         color = MaterialTheme.colorScheme.surface,

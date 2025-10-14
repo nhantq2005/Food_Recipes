@@ -22,6 +22,8 @@ val onBackgroundDark = Color(0xFFD8F3E6)
 val outlineDark = Color(0xFF4D6358)
 val surfaceVariantDark = Color(0xFF3A4B3A)
 val onSurfaceVariantDark = Color(0xFFC8DAC8)
+val primaryContainerDark = Color(0xFF00513E)
+
 
 //Light theme color
 val primaryLight = Color(0xFF0B9A61)
@@ -35,3 +37,4 @@ val onBackgroundLight = Color(0xFFFFFFFF)
 val outlineLight = Color(0xFFCAC4D0)
 val surfaceVariantLight = Color(0xFFC0EAD9)
 val onSurfaceVariantLight = Color(0xFF3A4B3A)
+val primaryContainerLight = Color(0xFF86DDBA)

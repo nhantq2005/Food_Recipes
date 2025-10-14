@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,11 +50,9 @@ import com.example.foodrecipes.feature_food_recipes.presentation.components.Chip
 import com.example.foodrecipes.feature_food_recipes.presentation.components.LargeMealItem
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SearchTextField
 import com.example.foodrecipes.feature_food_recipes.presentation.components.SmallMealItem
-import com.example.foodrecipes.feature_food_recipes.presentation.event.FireStoreEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.event.HomeEvent
 import com.example.foodrecipes.feature_food_recipes.presentation.state.HomeState
 import com.example.foodrecipes.feature_food_recipes.presentation.state.UserData
-import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.FireStoreViewModel
 import com.example.foodrecipes.feature_food_recipes.presentation.viewmodel.HomeViewModel
 import com.example.foodrecipes.ui.theme.FoodRecipesTheme
 import com.example.foodrecipes.util.Responsive
@@ -66,7 +65,7 @@ fun HomeScreen(
 ) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val state by homeViewModel.state.collectAsState()
-//    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
+    val context = LocalContext.current
 
     BottomBar(navController = navController) {
         Column(
@@ -119,22 +118,13 @@ fun HomeScreen(
                     .fillMaxSize()
                     .shadow(elevation = 10.dp, shape = RoundedCornerShape(10.dp))
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding(0.dp)
             ) {
-//                if (state.isLoading) {
-//                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//                        CircularProgressIndicator()
-//                    }
-//                }
-//                else {
-//                MealRecommendation(
-//                    state = state,
-//                    viewModel = homeViewModel,
-//                    navController = navController
-//                )
-//                }
                 if (state.searhWord != "")
-                    MealsResult(state = state, navController = navController)
+                    MealsResult(
+                        homeViewModel = homeViewModel,
+                        state = state,
+                        navController = navController
+                    )
                 else
                     MealRecommendation(
                         state = state,
@@ -148,11 +138,10 @@ fun HomeScreen(
 
 @Composable
 fun MealsResult(
+    homeViewModel: HomeViewModel,
     state: HomeState,
     navController: NavController
 ) {
-    val viewModel = rememberCoroutineScope()
-    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -166,21 +155,20 @@ fun MealsResult(
                     contentDescription = "Add Icon",
                     modifier = Modifier
                         .clickable {
-                            viewModel.launch {
-                                fireStoreViewModel.onEvent(
-                                    FireStoreEvent.AddMeal(
-                                        MealItem(
-                                            idMeal = mealItem.idMeal,
-                                            strMeal = mealItem.strMeal,
-                                            strMealThumb = mealItem.strMealThumb
-                                        )
+//                            viewModel.launch {
+                            homeViewModel.onEvent(
+                                HomeEvent.AddMeal(
+                                    MealItem(
+                                        idMeal = mealItem.idMeal,
+                                        strMeal = mealItem.strMeal,
+                                        strMealThumb = mealItem.strMealThumb,
+                                        timestamp = System.currentTimeMillis()
                                     )
                                 )
-                            }
+                            )
                         }
                 )
-            }
-            )
+            })
         }
     }
 }
@@ -191,8 +179,6 @@ fun MealRecommendation(
     homeViewModel: HomeViewModel,
     navController: NavController
 ) {
-    val viewModel = rememberCoroutineScope()
-    val fireStoreViewModel = hiltViewModel<FireStoreViewModel>()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -212,7 +198,6 @@ fun MealRecommendation(
                 Spacer(modifier = Modifier.height(10.dp))
                 state.randomMeal?.let { LargeMealItem(it, navController = navController) }
             }
-
         }
 
         item(span = { GridItemSpan(2) }) {
@@ -247,21 +232,19 @@ fun MealRecommendation(
                     contentDescription = "Add Icon",
                     modifier = Modifier
                         .clickable {
-                            viewModel.launch {
-                                fireStoreViewModel.onEvent(
-                                    FireStoreEvent.AddMeal(
-                                        MealItem(
-                                            idMeal = mealItem.idMeal,
-                                            strMeal = mealItem.strMeal,
-                                            strMealThumb = mealItem.strMealThumb
-                                        )
+                            homeViewModel.onEvent(
+                                HomeEvent.AddMeal(
+                                    MealItem(
+                                        idMeal = mealItem.idMeal,
+                                        strMeal = mealItem.strMeal,
+                                        strMealThumb = mealItem.strMealThumb,
+                                        timestamp = System.currentTimeMillis()
                                     )
                                 )
-                            }
+                            )
                         }
                 )
-            }
-            )
+            })
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.foodrecipes.feature_food_recipes.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -68,12 +69,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             FoodRecipesTheme {
                 val navController = rememberNavController()
+                val startDestination: String = if (googleAuthUiClient.getSignedInUser() == null)
+                    Screen.LoginScreen.route
+                else
+                    Screen.HomeScreen.route
                 NavHost(
-                    navController = navController, startDestination =
-                        if (googleAuthUiClient.getSignedInUser() == null)
-                            Screen.LoginScreen.route
-                        else
-                            Screen.HomeScreen.route
+                    navController = navController, startDestination = startDestination
                 ) {
                     composable(Screen.HomeScreen.route) {
                         HomeScreen(
@@ -98,7 +99,13 @@ class MainActivity : ComponentActivity() {
                                 lifecycleScope.launch {
                                     googleAuthUiClient.signOut()
                                 }
-                                navController.navigate(Screen.LoginScreen.route)
+                                //Tranh loi khi sign out tro ve man hinh Home
+                                navController.navigate(Screen.LoginScreen.route) {
+                                    popUpTo(Screen.HomeScreen.route) {
+                                        inclusive = true
+                                    } // xóa Home khỏi stack
+                                    launchSingleTop = true
+                                }
                             }
                         )
                     }
