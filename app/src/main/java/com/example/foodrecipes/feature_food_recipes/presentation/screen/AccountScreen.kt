@@ -106,8 +106,7 @@ fun AccountScreen(
                 )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(5.dp),
-//                    modifier = Modifier.height(250.dp)
+                    contentPadding = PaddingValues(5.dp)
                 ) {
 
                     items(state.value.currentMeals) { meal ->
@@ -172,6 +171,5 @@ fun AccountScreen(
 fun PreviewAccountScreen() {
     FoodRecipesTheme(dynamicColor = false) {
 //        AccountScreen(rememberNavController(), {})
-
     }
 }

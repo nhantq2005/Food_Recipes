@@ -5,4 +5,5 @@ sealed class FavouriteEvent {
     data class DeleteMeal(val mealId:String):FavouriteEvent()
     data class FindMeal(val name:String):FavouriteEvent()
     data class EnteredKeyword(val keyword:String):FavouriteEvent()
+    data object RestoreMeal:FavouriteEvent()
 }

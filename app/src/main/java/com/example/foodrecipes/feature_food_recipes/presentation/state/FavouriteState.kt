@@ -4,5 +4,7 @@ import com.example.foodrecipes.feature_food_recipes.domain.model.MealItem
 
 data class FavouriteState (
     val listFavourite: List<MealItem> = emptyList(),
-    val keyword: String = ""
+    val keyword: String = "",
+    val isLoading:Boolean = false,
+    val recentMeal: MealItem? = null
 )

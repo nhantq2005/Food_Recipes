@@ -1,5 +1,7 @@
 package com.example.foodrecipes.di
 
+import android.app.Application
+import android.widget.Toast
 import com.example.foodrecipes.feature_food_recipes.data.model.api.FoodRecipesApi
 import com.example.foodrecipes.feature_food_recipes.data.repository.MealRepositoryImpl
 import com.example.foodrecipes.feature_food_recipes.domain.repository.MealRepository
@@ -14,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
@@ -53,5 +56,20 @@ object AppModule {
             .client(client)
             .build()
             .create()
+    }
+
+    @Singleton
+    class NotificationManager @Inject constructor(private val application: Application) {
+        fun showToast(message: String) {
+            Toast.makeText(application, message, Toast.LENGTH_SHORT).show()
+        }
+
+//        fun showSnackBar(message: String){
+//            Snackbar.make(
+//                findViewById(android.R.id.content),
+//                message,
+//                Snackbar.LENGTH_SHORT
+//            ).show()
+//        }
     }
 }

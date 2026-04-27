@@ -19,8 +19,6 @@ class AuthViewModel : ViewModel() {
                 signInError = result.errorMessage
             )
         }
-
-
     }
 
     fun resetState() {
